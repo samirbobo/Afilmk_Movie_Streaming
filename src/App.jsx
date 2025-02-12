@@ -1,15 +1,26 @@
+// react-router
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
   RouterProvider,
 } from "react-router-dom";
+
+// Pages
 import RootLayout from "./components/RootLayout";
 import Home from "./pages/Home";
-import NotFoundPage from "./pages/NotFoundPage";
 import Movies from "./pages/Movies";
 import TvShows from "./pages/TvShows";
+import NotFoundPage from "./pages/NotFoundPage";
 import LatestAdditions from "./pages/LatestAdditions";
+
+// Material UI
+import { ColorModeContext, useMode } from "./theme";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+
+// React Query 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,8 +36,31 @@ const router = createBrowserRouter(
   )
 );
 
+const MINUTE = 1000 * 60;
+const client = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: MINUTE, // to make data save in cache to 10 minute
+    },
+  },
+});
+
 function App() {
-  return <RouterProvider router={router} />;
+  const [theme, colorMode] = useMode();
+
+  return (
+    // theme provider form Material UI
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+
+        <QueryClientProvider client={client}>
+          <RouterProvider router={router} />
+          <ReactQueryDevtools initialIsOpen={true} />
+        </QueryClientProvider>
+      </ThemeProvider>
+    </ColorModeContext.Provider>
+  );
 }
 
 export default App;
