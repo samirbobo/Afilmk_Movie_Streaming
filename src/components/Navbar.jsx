@@ -3,7 +3,6 @@ import { Close, Menu, Search } from "@mui/icons-material";
 import {
   AppBar,
   Box,
-  CssBaseline,
   Divider,
   Drawer,
   IconButton,
@@ -81,9 +80,7 @@ const Navbar = (props) => {
   }
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-
+    <>
       <HideOnScroll {...props}>
         <AppBar component="nav">
           <Toolbar>
@@ -206,7 +203,7 @@ const Navbar = (props) => {
           </Typography>
         </Box>
       </Drawer>
-    </Box>
+    </>
   );
 };
 
