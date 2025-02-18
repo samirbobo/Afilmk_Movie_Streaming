@@ -8,8 +8,8 @@ import {
 
 // Pages
 import RootLayout from "./components/RootLayout";
-import Home from "./pages/Home";
 import Movies from "./pages/Movies";
+import Home from "./pages/home/Home";
 import TvShows from "./pages/TvShows";
 import NotFoundPage from "./pages/NotFoundPage";
 import LatestAdditions from "./pages/LatestAdditions";
