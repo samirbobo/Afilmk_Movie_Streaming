@@ -18,9 +18,14 @@ import LatestAdditions from "./pages/LatestAdditions";
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
-// React Query 
+// React Query
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Trending from "./pages/Trending";
+import TopRated from "./pages/TopRated";
+import GenresProvider from "./context/GenresContext";
+import Upcoming from "./pages/Upcoming";
+import Popular from "./pages/Popular";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +35,10 @@ const router = createBrowserRouter(
       <Route path="movies" element={<Movies />} />
       <Route path="tv-shows" element={<TvShows />} />
       <Route path="latest-additions" element={<LatestAdditions />} />
+      <Route path="trending" element={<Trending />} />
+      <Route path="top-rated" element={<TopRated />} />
+      <Route path="upcoming" element={<Upcoming />} />
+      <Route path="popular" element={<Popular />} />
 
       <Route path="*" element={<NotFoundPage />} />
     </Route>
@@ -55,7 +64,9 @@ function App() {
         <CssBaseline />
 
         <QueryClientProvider client={client}>
-          <RouterProvider router={router} />
+          <GenresProvider>
+            <RouterProvider router={router} />
+          </GenresProvider>
           <ReactQueryDevtools initialIsOpen={true} />
         </QueryClientProvider>
       </ThemeProvider>

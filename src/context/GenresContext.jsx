@@ -14,6 +14,7 @@ const GenresProvider = ({ children }) => {
   } = useQuery({
     queryKey: ["movie-genres"],
     queryFn: () => axios.get(`${BASE_URL}/genre/movie/list?api_key=${API_KEY}`),
+    select: (data) => data.data.genres,
   });
 
   const {
@@ -22,16 +23,26 @@ const GenresProvider = ({ children }) => {
     isError: tvShowsError,
   } = useQuery({
     queryKey: ["tv-genres"],
-    queryFn: () => axios.get(`${BASE_URL}/genre/movie/list?api_key=${API_KEY}`),
+    queryFn: () => axios.get(`${BASE_URL}/genre/tv/list?api_key=${API_KEY}`),
+    select: (data) => data.data.genres,
   });
 
+  const getGenreNames = (genresIDS, genres) => {
+    if (genres.length < 1) return [];
+    return genresIDS.map((id) => {
+      const genre = genres.find((item) => item.id === id);
+      return genre ? genre.name : "Unknown";
+    });
+  };
+
   const values = {
-    movieGenres,
+    movieGenres: movieGenres || [],
     isMoviesLoading,
     moviesError,
-    tvShowGenres,
+    tvShowGenres: tvShowGenres || [],
     isTvShowsLoading,
     tvShowsError,
+    getGenreNames,
   };
   return (
     <GenresContext.Provider value={values}>{children}</GenresContext.Provider>

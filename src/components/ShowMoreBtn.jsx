@@ -1,10 +1,14 @@
+/* eslint-disable react/prop-types */
 import { Button, useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-const ShowMoreBtn = () => {
+const ShowMoreBtn = ({ link }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   return (
     <Button
+      onClick={() => navigate(link)}
       sx={{
         border: "2px solid",
         borderColor: theme.palette.text.secondary,

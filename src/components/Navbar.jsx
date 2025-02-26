@@ -107,7 +107,7 @@ const Navbar = (props) => {
                 data={
                   moviesError
                     ? [{ id: "all", name: "All" }]
-                    : [{ id: "all", name: "All" }, ...movieGenres.data.genres]
+                    : [{ id: "all", name: "All" }, ...movieGenres]
                 }
               />
               <Links
@@ -115,7 +115,7 @@ const Navbar = (props) => {
                 data={
                   tvShowsError
                     ? [{ id: "all", name: "All" }]
-                    : [{ id: "all", name: "All" }, ...tvShowGenres.data.genres]
+                    : [{ id: "all", name: "All" }, ...tvShowGenres]
                 }
               />
               <Typography variant="body1" sx={{ cursor: "pointer" }}>
@@ -183,7 +183,7 @@ const Navbar = (props) => {
             links={
               moviesError
                 ? [{ id: "all", name: "All" }]
-                : [{ id: "all", name: "All" }, ...movieGenres.data.genres]
+                : [{ id: "all", name: "All" }, ...movieGenres]
             }
           />
           <AccordionLinks
@@ -191,7 +191,7 @@ const Navbar = (props) => {
             links={
               tvShowsError
                 ? [{ id: "all", name: "All" }]
-                : [{ id: "all", name: "All" }, ...tvShowGenres.data.genres]
+                : [{ id: "all", name: "All" }, ...tvShowGenres]
             }
           />
           <Divider />

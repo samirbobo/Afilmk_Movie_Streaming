@@ -10,6 +10,8 @@ const Trending = () => {
     queryKey: ["trending-media"],
     queryFn: () =>
       axios.get(`${BASE_URL}/trending/all/week?api_key=${API_KEY}`),
+    select: (data) =>
+      data.data.results.filter((item) => item.media_type !== "person"),
   });
 
   if (isLoading) {
@@ -47,7 +49,7 @@ const Trending = () => {
         >
           Trending
         </Typography>
-        <ShowMoreBtn />
+        <ShowMoreBtn link={"trending"} />
       </Stack>
       <MediaCarousel data={data} />
     </Container>
