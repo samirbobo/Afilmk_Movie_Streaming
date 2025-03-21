@@ -1,20 +1,20 @@
-import { Box, Stack, Typography, useTheme } from "@mui/material";
-import MediaTabs from "../../../components/MediaTabs";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { API_KEY, BASE_URL } from "../../../baseUrl";
+import { Container, Stack, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import axios from "axios";
 import MediaList from "../../../components/MediaList";
+import MediaTabs from "../../../components/MediaTabs";
+import { API_KEY, BASE_URL } from "../../../baseUrl";
 
 const Upcoming = () => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const [tabIndex, setTabIndex] = useState(0);
+  const [selectedTab, setSelectedTab] = useState(0);
   const today = new Date().toISOString().split("T")[0];
 
-  const handleChange = (event, newIndex) => {
-    setTabIndex(newIndex);
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue);
   };
 
   const {
@@ -24,7 +24,7 @@ const Upcoming = () => {
   } = useQuery({
     queryKey: ["Upcoming-movies"],
     queryFn: () => axios.get(`${BASE_URL}/movie/upcoming?api_key=${API_KEY}`),
-    select: (data) => data.data.results,
+    select: (data) => data.data.results.slice(0, 12),
   });
 
   const {
@@ -37,7 +37,7 @@ const Upcoming = () => {
       axios.get(
         `${BASE_URL}/discover/tv?api_key=${API_KEY}&sort_by=first_air_date.asc&first_air_date.gte=${today}`
       ),
-    select: (data) => data.data.results.filter((item) => item.poster_path),
+    select: (data) => data.data.results.filter((item) => item.poster_path).slice(0, 12),
   });
 
   if (isMovieLoading || isTvShowsLoading) {
@@ -49,7 +49,7 @@ const Upcoming = () => {
   }
 
   return (
-    <Box
+    <Container
       component={"section"}
       className="top-rated"
       sx={{
@@ -59,14 +59,7 @@ const Upcoming = () => {
       }}
     >
       {/* Header of section */}
-      <Stack
-        sx={{
-          flexDirection: "row",
-          alignItems: "center",
-          paddingBottom: "30px",
-          gap: { xs: 1, md: 4 },
-        }}
-      >
+      <Stack direction="row" alignItems="center" pb={4} gap={{ xs: 1, md: 4 }}>
         <Typography
           variant="h2"
           onClick={() => navigate("upcoming")}
@@ -77,7 +70,7 @@ const Upcoming = () => {
             lineHeight: "32px",
             cursor: "pointer",
             transition: "0.2s linear",
-            ":hover": {
+            "&:hover": {
               color: theme.palette.primary.main,
             },
           }}
@@ -85,15 +78,15 @@ const Upcoming = () => {
           Upcoming
         </Typography>
 
-        <MediaTabs tabIndex={tabIndex} handleChange={handleChange} />
+        <MediaTabs tabIndex={selectedTab} handleChange={handleTabChange} />
       </Stack>
 
       <MediaList
-        data={tabIndex === 0 ? upComingMovies : upComingTvShows}
-        genresType={tabIndex}
+        data={selectedTab === 0 ? upComingMovies : upComingTvShows}
+        genresType={selectedTab}
         section="Upcoming"
       />
-    </Box>
+    </Container>
   );
 };
 

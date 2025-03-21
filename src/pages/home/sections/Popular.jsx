@@ -1,20 +1,24 @@
-import { useTheme } from "@emotion/react";
-import { Box, Stack, Typography } from "@mui/material";
-import MediaTabs from "../../../components/MediaTabs";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Container, Stack, Typography, useTheme } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import axios from "axios";
-import { API_KEY, BASE_URL } from "../../../baseUrl";
+import MediaTabs from "../../../components/MediaTabs";
 import MediaList from "../../../components/MediaList";
+import { API_KEY, BASE_URL } from "../../../baseUrl";
+
+const fetchPopularMedia = (type) =>
+  axios
+    .get(`${BASE_URL}/${type}/popular?api_key=${API_KEY}`)
+    .then((data) => data.data.results.slice(0, 12));
 
 const Popular = () => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const [tabIndex, setTabIndex] = useState(0);
+  const [selectedTab, setSelectedTab] = useState(0);
 
-  const handleChange = (event, newIndex) => {
-    setTabIndex(newIndex);
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue);
   };
 
   const {
@@ -23,8 +27,7 @@ const Popular = () => {
     isError: isMovieError,
   } = useQuery({
     queryKey: ["popular-movies"],
-    queryFn: () => axios.get(`${BASE_URL}/movie/popular?api_key=${API_KEY}`),
-    select: (data) => data.data.results,
+    queryFn: () => fetchPopularMedia("movie"),
   });
 
   const {
@@ -33,8 +36,7 @@ const Popular = () => {
     isError: isTvShowsError,
   } = useQuery({
     queryKey: ["popular-tvShows"],
-    queryFn: () => axios.get(`${BASE_URL}/tv/popular?api_key=${API_KEY}`),
-    select: (data) => data.data.results,
+    queryFn: () => fetchPopularMedia("tv"),
   });
 
   if (isMovieLoading || isTvShowsLoading) {
@@ -46,7 +48,7 @@ const Popular = () => {
   }
 
   return (
-    <Box
+    <Container
       component={"section"}
       className="popular"
       sx={{
@@ -56,14 +58,7 @@ const Popular = () => {
       }}
     >
       {/* Header of section */}
-      <Stack
-        sx={{
-          flexDirection: "row",
-          alignItems: "center",
-          paddingBottom: "30px",
-          gap: { xs: 1, md: 4 },
-        }}
-      >
+      <Stack direction="row" alignItems="center" pb={4} gap={{ xs: 1, md: 4 }}>
         <Typography
           variant="h2"
           onClick={() => navigate("popular")}
@@ -82,14 +77,14 @@ const Popular = () => {
           Popular
         </Typography>
 
-        <MediaTabs tabIndex={tabIndex} handleChange={handleChange} />
+        <MediaTabs tabIndex={selectedTab} handleChange={handleTabChange} />
       </Stack>
 
       <MediaList
-        data={tabIndex === 0 ? popularMovies : popularTvShows}
-        genresType={tabIndex}
+        data={selectedTab === 0 ? popularMovies : popularTvShows}
+        genresType={selectedTab}
       />
-    </Box>
+    </Container>
   );
 };
 

@@ -1,9 +1,9 @@
 import { Container, Stack, Typography } from "@mui/material";
-import MediaCarousel from "../../../components/MediaCarousel";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { API_KEY, BASE_URL } from "../../../baseUrl";
 import ShowMoreBtn from "../../../components/showMoreBtn";
+import MediaCarousel from "../../../components/MediaCarousel";
 
 const Trending = () => {
   const { data, isLoading, isError } = useQuery({
@@ -32,6 +32,7 @@ const Trending = () => {
         maxWidth: "1920px !important",
       }}
     >
+      {/* Header section */}
       <Stack
         flexDirection={"row"}
         justifyContent={"space-between"}
@@ -51,6 +52,7 @@ const Trending = () => {
         </Typography>
         <ShowMoreBtn link={"trending"} />
       </Stack>
+
       <MediaCarousel data={data} />
     </Container>
   );

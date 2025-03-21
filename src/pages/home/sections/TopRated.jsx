@@ -1,39 +1,43 @@
-import { Box, Stack, Typography, useTheme } from "@mui/material";
+import { Container, Stack, Typography, useTheme } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { API_KEY, BASE_URL } from "../../../baseUrl";
 import MediaTabs from "../../../components/MediaTabs";
-import { useNavigate } from "react-router-dom";
 import MediaList from "../../../components/MediaList";
+
+// دالة مساعدة لجلب البيانات
+const fetchTopRated = (type) =>
+  axios
+    .get(`${BASE_URL}/${type}/top_rated?api_key=${API_KEY}`)
+    .then((res) => res.data.results.slice(0, 12));
 
 const TopRated = () => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const [tabIndex, setTabIndex] = useState(0);
+  const [selectedTab, setSelectedTab] = useState(0);
 
-  const handleChange = (event, newIndex) => {
-    setTabIndex(newIndex);
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue);
   };
 
   const {
-    data: topMovies,
+    data: topMovies = [],
     isLoading: isMovieLoading,
     isError: isMovieError,
   } = useQuery({
     queryKey: ["top-rated-movies"],
-    queryFn: () => axios.get(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}`),
-    select: (data) => data.data.results,
+    queryFn: () => fetchTopRated("movie"),
   });
 
   const {
-    data: topTvShows,
+    data: topTvShows = [],
     isLoading: isTvShowsLoading,
     isError: isTvShowsError,
   } = useQuery({
-    queryKey: ["top-rated-tvShows"],
-    queryFn: () => axios.get(`${BASE_URL}/tv/top_rated?api_key=${API_KEY}`),
-    select: (data) => data.data.results,
+    queryKey: ["top-rated-tv-shows"],
+    queryFn: () => fetchTopRated("tv"),
   });
 
   if (isMovieLoading || isTvShowsLoading) {
@@ -45,26 +49,19 @@ const TopRated = () => {
   }
 
   return (
-    <Box
-      component={"section"}
-      className="top-rated"
+    <Container
+      component="section"
       sx={{
         px: { xs: "1rem", sm: "3rem", md: "4rem" },
         py: 4,
         maxWidth: "1920px !important",
       }}
     >
-      <Stack
-        sx={{
-          flexDirection: "row",
-          alignItems: "center",
-          paddingBottom: "30px",
-          gap: { xs: 1, md: 4 },
-        }}
-      >
+      {/* Header of section */}
+      <Stack direction="row" alignItems="center" pb={4} gap={{ xs: 1, md: 4 }}>
         <Typography
           variant="h2"
-          onClick={() => navigate("top-rated")}
+          onClick={() => navigate("/top-rated")}
           sx={{
             fontSize: "24px",
             fontWeight: 900,
@@ -72,22 +69,21 @@ const TopRated = () => {
             lineHeight: "32px",
             cursor: "pointer",
             transition: "0.2s linear",
-            ":hover": {
+            "&:hover": {
               color: theme.palette.primary.main,
             },
           }}
         >
           Top Rated
         </Typography>
-
-        <MediaTabs tabIndex={tabIndex} handleChange={handleChange} />
+        <MediaTabs tabIndex={selectedTab} handleChange={handleTabChange} />
       </Stack>
 
       <MediaList
-        data={tabIndex === 0 ? topMovies : topTvShows}
-        genresType={tabIndex}
+        data={selectedTab === 0 ? topMovies : topTvShows}
+        genresType={selectedTab}
       />
-    </Box>
+    </Container>
   );
 };
 

@@ -5,14 +5,20 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+import { lazy } from "react";
 
 // Pages
 import RootLayout from "./components/RootLayout";
-import Movies from "./pages/Movies";
 import Home from "./pages/home/Home";
-import TvShows from "./pages/TvShows";
-import NotFoundPage from "./pages/NotFoundPage";
-import LatestAdditions from "./pages/LatestAdditions";
+// add lazy load for each page to make the web site faster
+const Movies = lazy(() => import("./pages/Movies"));
+const TvShows = lazy(() => import("./pages/TvShows"));
+const LatestAdditions = lazy(() => import("./pages/LatestAdditions"));
+const Trending = lazy(() => import("./pages/Trending"));
+const TopRated = lazy(() => import("./pages/TopRated"));
+const Upcoming = lazy(() => import("./pages/Upcoming"));
+const Popular = lazy(() => import("./pages/Popular"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 // Material UI
 import { ColorModeContext, useMode } from "./theme";
@@ -21,11 +27,9 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 // React Query
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import Trending from "./pages/Trending";
-import TopRated from "./pages/TopRated";
+
+// Context
 import GenresProvider from "./context/GenresContext";
-import Upcoming from "./pages/Upcoming";
-import Popular from "./pages/Popular";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

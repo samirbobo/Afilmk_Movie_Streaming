@@ -13,7 +13,7 @@ const Hero = () => {
         zIndex: 1,
       }}
     >
-      {/*Overlay  */}
+      {/* Overlay */}
       <Box
         sx={{
           position: "absolute",

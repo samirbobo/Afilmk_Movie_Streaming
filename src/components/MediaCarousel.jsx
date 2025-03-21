@@ -53,6 +53,7 @@ const MediaCarousel = ({ data }) => {
             >
               <CardMedia
                 component="img"
+                loading="lazy"
                 image={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
                 alt={item.title || "poster path"}
                 sx={{
