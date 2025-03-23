@@ -1,10 +1,33 @@
 /* eslint-disable react/prop-types */
 import { ExpandMore } from "@mui/icons-material";
-import { Box, Grid, ListItem, ListItemButton, ListItemText, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Paper,
+  Typography,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Links = ({ title, data }) => {
+  const navigate = useNavigate();
+
+  const handleNavigation = (link) => {
+    const basePath = title === "Movies" ? "movies" : "tv-shows";
+    const linkName = link.name || "All"; // لو اللينك مش موجود بخليه يروح علي الصفحه العامه افضل
+    const path =
+      linkName === "All"
+        ? `/${basePath}`
+        : `/${basePath}/${linkName.toLowerCase()}`;
+    navigate(path);
+  };
+
   return (
     <Box
+      component={"li"}
       sx={{
         display: "flex",
         alignItems: "center",
@@ -17,24 +40,32 @@ const Links = ({ title, data }) => {
       <ExpandMore sx={{ fontSize: "16px", ml: 1 }} />
 
       {/* هنا البوكس الي فيه كل الينكات */}
-      <Box
+      <List
         className="box-links"
         sx={{
-          minWidth: "550px",
+          minWidth: "500px",
           position: "absolute",
           top: "100%",
-          left: {sm: "75%", md: "50%"},
+          left: { sm: "75%", md: "50%" },
           transform: "translateX(-50%)",
           display: "none",
           zIndex: 999,
         }}
       >
-        <Paper sx={{ mt: 2 }}>
+        <Paper sx={{ mt: 2, borderRadius: "0.5rem" }}>
           <Grid container>
             {data.map((link) => (
-              <Grid item xs={3} key={link.id}>
+              <Grid item xs={4} key={link.id}>
                 <ListItem disablePadding>
-                  <ListItemButton sx={{ display: "flex", py: 1, px: 1.5 }}>
+                  <ListItemButton
+                    onClick={() => handleNavigation(link)}
+                    sx={{
+                      display: "flex",
+                      py: "6px",
+                      px: 1.5,
+                      textAlign: "center",
+                    }}
+                  >
                     <ListItemText
                       sx={{
                         "& .MuiTypography-root": {
@@ -50,9 +81,9 @@ const Links = ({ title, data }) => {
             ))}
           </Grid>
         </Paper>
-      </Box>
+      </List>
     </Box>
   );
 };
 
-export default Links
+export default Links;

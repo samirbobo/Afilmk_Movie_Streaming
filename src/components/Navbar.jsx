@@ -75,7 +75,7 @@ const Navbar = (props) => {
     setSearchOpen((prevState) => !prevState);
   };
 
-  if (isMoviesLoading) {
+  if (isMoviesLoading || isTvShowsLoading) {
     return "Loading..";
   }
 
@@ -118,7 +118,11 @@ const Navbar = (props) => {
                     : [{ id: "all", name: "All" }, ...tvShowGenres]
                 }
               />
-              <Typography variant="body1" sx={{ cursor: "pointer" }}>
+              <Typography
+                component={"li"}
+                variant="body1"
+                sx={{ cursor: "pointer", listStyle: "none" }}
+              >
                 Latest Additions
               </Typography>
             </Box>

@@ -8,11 +8,15 @@ import {
 import { lazy } from "react";
 
 // Pages
+// add lazy load for each page to make the web site faster
 import RootLayout from "./components/RootLayout";
 import Home from "./pages/home/Home";
-// add lazy load for each page to make the web site faster
-const Movies = lazy(() => import("./pages/Movies"));
-const TvShows = lazy(() => import("./pages/TvShows"));
+const Movies = lazy(() => import("./pages/movies/Movies"));
+const MovieType = lazy(() => import("./pages/movies/MovieType"));
+
+const TvShows = lazy(() => import("./pages/tvShows/TvShows"));
+const TvType = lazy(() => import("./pages/tvShows/TvType"));
+
 const LatestAdditions = lazy(() => import("./pages/LatestAdditions"));
 const Trending = lazy(() => import("./pages/Trending"));
 const TopRated = lazy(() => import("./pages/TopRated"));
@@ -37,7 +41,11 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
 
       <Route path="movies" element={<Movies />} />
+      <Route path="movies/:movieType" element={<MovieType />} />
+
       <Route path="tv-shows" element={<TvShows />} />
+      <Route path="tv-shows/:tvType" element={<TvType />} />
+
       <Route path="latest-additions" element={<LatestAdditions />} />
       <Route path="trending" element={<Trending />} />
       <Route path="top-rated" element={<TopRated />} />

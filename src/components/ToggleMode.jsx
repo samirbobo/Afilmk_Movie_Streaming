@@ -11,6 +11,7 @@ const ToggleMode = () => {
     <>
       {theme.palette.mode === "light" ? (
         <IconButton
+          aria-label="Dark Mode"
           onClick={() => {
             localStorage.setItem(
               "mode",
@@ -24,6 +25,7 @@ const ToggleMode = () => {
         </IconButton>
       ) : (
         <IconButton
+          aria-label="Light Mode"
           onClick={() => {
             localStorage.setItem(
               "mode",
