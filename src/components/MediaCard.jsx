@@ -116,7 +116,7 @@ const MediaCard = ({ item, genresType, section }) => {
           width: "calc(100% - 20px)",
         }}
       >
-        {genreName && (
+        {genreName && section !== "MovieType" && (
           <Typography
             sx={{
               color: theme.palette.text.primary,
