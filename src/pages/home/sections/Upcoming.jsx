@@ -24,7 +24,8 @@ const Upcoming = () => {
   } = useQuery({
     queryKey: ["Upcoming-movies"],
     queryFn: () => axios.get(`${BASE_URL}/movie/upcoming?api_key=${API_KEY}`),
-    select: (data) => data.data.results.slice(0, 12),
+    select: (data) =>
+      data.data.results.filter((item) => item.poster_path).slice(0, 12),
   });
 
   const {
@@ -37,7 +38,8 @@ const Upcoming = () => {
       axios.get(
         `${BASE_URL}/discover/tv?api_key=${API_KEY}&sort_by=first_air_date.asc&first_air_date.gte=${today}`
       ),
-    select: (data) => data.data.results.filter((item) => item.poster_path).slice(0, 12),
+    select: (data) =>
+      data.data.results.filter((item) => item.poster_path).slice(0, 12),
   });
 
   if (isMovieLoading || isTvShowsLoading) {
@@ -59,7 +61,13 @@ const Upcoming = () => {
       }}
     >
       {/* Header of section */}
-      <Stack direction="row" alignItems="center" pb={4} gap={{ xs: 1, md: 4 }}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        pb={1.5}
+        // gap={{ xs: 1, md: 4 }}
+      >
         <Typography
           variant="h2"
           onClick={() => navigate("upcoming")}

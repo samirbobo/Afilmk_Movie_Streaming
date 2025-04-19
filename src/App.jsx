@@ -61,7 +61,8 @@ const MINUTE = 1000 * 60;
 const client = new QueryClient({
   defaultOptions: {
     queries: {
-      gcTime: MINUTE, // to make data save in cache to 10 minute
+      staleTime: MINUTE, // البيانات تفضل "طازة" لمدة 1 دقيقة
+      gcTime: MINUTE * 10, // to make data save in cache to 10 minute
     },
   },
 });

@@ -11,7 +11,7 @@ import { Navigation } from "swiper/modules";
 import { Box, Card, CardMedia, Typography, useTheme } from "@mui/material";
 import { UseGlobalGenres } from "../context/GenresContext";
 
-const MediaCarousel = ({ data }) => {
+const MediaCarousel = ({ data, type }) => {
   const { movieGenres, tvShowGenres, getGenreNames } = UseGlobalGenres();
   const theme = useTheme();
 
@@ -30,10 +30,11 @@ const MediaCarousel = ({ data }) => {
       }}
     >
       {data.map((item) => {
-        const isMovie = item.media_type === "movie";
+        const isMediaType = item?.media_type ? item.media_type : type;
+        const isMovie = isMediaType === "movie";
         const genres = isMovie ? movieGenres : tvShowGenres;
         if (!genres || genres.length < 1) return null;
-        const genreNames = getGenreNames(item.genre_ids, genres);
+        const genreNames = getGenreNames(item?.genre_ids, genres);
 
         return (
           <SwiperSlide
@@ -128,25 +129,27 @@ const MediaCarousel = ({ data }) => {
                 ))}
               </Box>
 
-              <Typography
-                variant="body2"
-                sx={{
-                  position: "absolute",
-                  top: 10,
-                  right: 10,
-                  color: theme.palette.text.primary,
-                  backgroundColor: theme.palette.primary.main,
-                  padding: "5px 8px",
-                  borderRadius: "50px",
-                  fontSize: "13px",
-                  fontWeight: 800,
-                  textOverflow: "ellipsis",
-                  textWrapMode: "nowrap",
-                  overflow: "hidden",
-                }}
-              >
-                {item.media_type}
-              </Typography>
+              {item?.media_type && (
+                <Typography
+                  variant="body2"
+                  sx={{
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    color: theme.palette.text.primary,
+                    backgroundColor: theme.palette.primary.main,
+                    padding: "5px 8px",
+                    borderRadius: "50px",
+                    fontSize: "13px",
+                    fontWeight: 800,
+                    textOverflow: "ellipsis",
+                    textWrapMode: "nowrap",
+                    overflow: "hidden",
+                  }}
+                >
+                  {item.media_type}
+                </Typography>
+              )}
             </Card>
           </SwiperSlide>
         );

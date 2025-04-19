@@ -58,7 +58,13 @@ const TopRated = () => {
       }}
     >
       {/* Header of section */}
-      <Stack direction="row" alignItems="center" pb={4} gap={{ xs: 1, md: 4 }}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        pb={1.5}
+        // gap={{ xs: 1, md: 4 }}
+      >
         <Typography
           variant="h2"
           onClick={() => navigate("/top-rated")}

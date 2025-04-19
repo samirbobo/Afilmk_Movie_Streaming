@@ -4,6 +4,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { API_KEY, BASE_URL } from "../../baseUrl";
 import { UseGlobalGenres } from "../../context/GenresContext";
+import HeaderMediaType from "../../components/HeaderMediaType";
 
 const MovieType = () => {
   const { movieType } = useParams();
@@ -34,7 +35,10 @@ const MovieType = () => {
   return (
     <>
       <Toolbar />
-      <div>Movie Type Page {movieType}</div>
+      <HeaderMediaType
+        title={`${movieType} Movies`}
+        subTitle={`Explore the best of ${movieType} movies, carefully picked for your mood`}
+      />
     </>
   );
 };
