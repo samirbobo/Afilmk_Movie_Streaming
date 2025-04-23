@@ -3,6 +3,8 @@ import {
   Pagination,
   Toolbar,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -12,11 +14,14 @@ import { UseGlobalGenres } from "../../context/GenresContext";
 import HeaderMediaType from "../../components/HeaderMediaType";
 import MediaList from "../../components/MediaList";
 import { useState } from "react";
+import FilterMenu from "../../components/FilterMenu";
 
 const MAX_PAGES = 40;
 const ITEMS_PER_UI_PAGE = 60; // number of movies in one page
 
 const MovieType = () => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const { movieType } = useParams();
   const { movieGenres } = UseGlobalGenres();
   const [page, setPage] = useState(1);
@@ -89,6 +94,8 @@ const MovieType = () => {
           subTitle={`Explore the best of ${movieType} movies, carefully picked for your mood`}
         />
 
+        <FilterMenu />
+
         {isLoading ? (
           <Typography sx={{ textAlign: "center", py: 4, height: "40vh" }}>
             Loading...
@@ -103,10 +110,11 @@ const MovieType = () => {
 
         <Pagination
           count={totalCustomPages}
+          size={isSmallScreen ? "small" : "medium"}
           page={page}
           onChange={(e, value) => {
             setPage(value);
-            window.scrollTo({ top: 0, behavior: "smooth" }); // يرجع لفوق
+            window.scrollTo({ top: 0, behavior: "smooth" });
           }}
           color="primary"
           sx={{ mt: 4, display: "flex", justifyContent: "center" }}
