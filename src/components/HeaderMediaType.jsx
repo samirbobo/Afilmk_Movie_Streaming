@@ -8,6 +8,7 @@ const HeaderMediaType = ({ title, subTitle }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const pathNames = location.pathname.split("/");
+  console.log(pathNames)
 
   function handleClick(event, link) {
     event.preventDefault();
@@ -52,28 +53,30 @@ const HeaderMediaType = ({ title, subTitle }) => {
         sx={{ marginBottom: { xs: "24px", md: "32px", xl: "48px" } }}
         separator={<NavigateNextIcon fontSize="small" />}
         aria-label="breadcrumb"
+        component={"div"}
       >
         {pathNames.map((path, index) => {
+          const decodedPath = decodeURIComponent(path); // Decode the path
           if (index === pathNames.length - 1) {
             return (
               <Typography
                 key={path}
                 sx={{ color: "text.primary", textTransform: "capitalize" }}
               >
-                {path}
+                {decodedPath}
               </Typography>
             );
           } else {
             return (
               <Link
                 underline="hover"
-                key={path === "" ? "home" : path}
+                key={path === "" ? "home" : decodedPath}
                 color="inherit"
                 textTransform={"capitalize"}
                 href={path}
                 onClick={(event) => handleClick(event, path)}
               >
-                {path === "" ? "home" : path}
+                {path === "" ? "home" : decodedPath}
               </Link>
             );
           }

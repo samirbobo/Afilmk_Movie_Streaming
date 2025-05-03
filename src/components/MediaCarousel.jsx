@@ -9,6 +9,7 @@ import "swiper/css/navigation";
 // import required modules
 import { Navigation } from "swiper/modules";
 import { Box, Card, CardMedia, Typography, useTheme } from "@mui/material";
+import StarIcon from "@mui/icons-material/Star";
 import { UseGlobalGenres } from "../context/GenresContext";
 
 const MediaCarousel = ({ data, type }) => {
@@ -65,6 +66,8 @@ const MediaCarousel = ({ data, type }) => {
                   },
                 }}
               />
+
+              {/* Title of media type */}
               <Box
                 sx={{
                   position: "absolute",
@@ -91,6 +94,7 @@ const MediaCarousel = ({ data, type }) => {
                 </Typography>
               </Box>
 
+              {/* Genre of media type */}
               <Box
                 className="genres"
                 sx={{
@@ -129,27 +133,55 @@ const MediaCarousel = ({ data, type }) => {
                 ))}
               </Box>
 
-              {item?.media_type && (
-                <Typography
-                  variant="body2"
-                  sx={{
-                    position: "absolute",
-                    top: 10,
-                    right: 10,
-                    color: theme.palette.text.primary,
-                    backgroundColor: theme.palette.primary.main,
-                    padding: "5px 8px",
-                    borderRadius: "50px",
-                    fontSize: "13px",
-                    fontWeight: 800,
-                    textOverflow: "ellipsis",
-                    textWrapMode: "nowrap",
-                    overflow: "hidden",
-                  }}
-                >
-                  {item.media_type}
-                </Typography>
-              )}
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                  gap: "0.25rem",
+                  width: "calc(100% - 20px)",
+                }}
+              >
+                {item?.media_type && (
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: theme.palette.text.primary,
+                      backgroundColor: theme.palette.primary.main,
+                      padding: "5px 8px",
+                      borderRadius: "50px",
+                      fontSize: "13px",
+                      fontWeight: 800,
+                      textOverflow: "ellipsis",
+                      textWrapMode: "nowrap",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {item.media_type}
+                  </Typography>
+                )}
+                {item?.vote_average > 0 && (
+                  <Typography
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 0.25,
+                      color: theme.palette.text.primary,
+                      backgroundColor: theme.palette.primary.main,
+                      padding: "3px 6px",
+                      borderRadius: "50px",
+                      fontSize: "12px",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {item.vote_average.toFixed(1)}
+                    <StarIcon sx={{ fontSize: 14 }} />
+                  </Typography>
+                )}
+              </Box>
             </Card>
           </SwiperSlide>
         );

@@ -1,15 +1,12 @@
-import { Container, Stack, Typography, useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Container } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import axios from "axios";
 import MediaList from "../../../components/MediaList";
-import MediaTabs from "../../../components/MediaTabs";
 import { API_KEY, BASE_URL } from "../../../baseUrl";
+import HeaderSection from "../../../components/HeaderSection";
 
 const Upcoming = () => {
-  const navigate = useNavigate();
-  const theme = useTheme();
   const [selectedTab, setSelectedTab] = useState(0);
   const today = new Date().toISOString().split("T")[0];
 
@@ -61,33 +58,12 @@ const Upcoming = () => {
       }}
     >
       {/* Header of section */}
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        pb={1.5}
-        // gap={{ xs: 1, md: 4 }}
-      >
-        <Typography
-          variant="h2"
-          onClick={() => navigate("upcoming")}
-          sx={{
-            fontSize: "24px",
-            fontWeight: 900,
-            letterSpacing: 0,
-            lineHeight: "32px",
-            cursor: "pointer",
-            transition: "0.2s linear",
-            "&:hover": {
-              color: theme.palette.primary.main,
-            },
-          }}
-        >
-          Upcoming
-        </Typography>
-
-        <MediaTabs tabIndex={selectedTab} handleChange={handleTabChange} />
-      </Stack>
+      <HeaderSection
+        link="/upcoming"
+        title="Upcoming"
+        selectedTab={selectedTab}
+        handleTabChange={handleTabChange}
+      />
 
       <MediaList
         data={selectedTab === 0 ? upComingMovies : upComingTvShows}

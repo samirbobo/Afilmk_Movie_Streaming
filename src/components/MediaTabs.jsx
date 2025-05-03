@@ -4,6 +4,20 @@ import { Box, Tab, Tabs } from "@mui/material";
 
 const MediaTabs = ({ tabIndex, handleChange }) => {
   const theme = useTheme();
+  const style = {
+    color: theme.palette.text.secondary,
+    transition: "all 0.3s ease-in-out",
+    padding: { xs: "8px 6px", sm: "14px 16px" },
+    textTransform: "capitalize",
+    minWidth: { xs: "auto", md: 90 },
+    minHeight: "auto",
+    borderRadius: "50px",
+    "&.Mui-selected": {
+      color: theme.palette.text.primary,
+      background: theme.palette.background.paper,
+      transition: "all 0.3s ease-in-out",
+    },
+  };
 
   return (
     <Box
@@ -18,39 +32,10 @@ const MediaTabs = ({ tabIndex, handleChange }) => {
         onChange={handleChange}
         centered
         TabIndicatorProps={{ sx: { display: "none" } }}
+        sx={{ minHeight: "auto" }}
       >
-        <Tab
-          sx={{
-            color: theme.palette.text.secondary,
-            padding: { xs: "6px", md: "12px 16px" },
-            textTransform: "capitalize",
-            minWidth: { xs: "auto", md: 90 },
-            transition: "all 0.3s ease-in-out",
-            borderRadius: "50px",
-            "&.Mui-selected": {
-              color: theme.palette.text.primary,
-              background: theme.palette.background.paper,
-              transition: "all 0.3s ease-in-out",
-            },
-          }}
-          label="Movies"
-        />
-        <Tab
-          sx={{
-            color: theme.palette.text.secondary,
-            transition: "all 0.3s ease-in-out",
-            padding: { xs: "6px", md: "12px 16px" },
-            textTransform: "capitalize",
-            minWidth: { xs: "auto", md: 90 },
-            borderRadius: "50px",
-            "&.Mui-selected": {
-              color: theme.palette.text.primary,
-              background: theme.palette.background.paper,
-              transition: "all 0.3s ease-in-out",
-            },
-          }}
-          label="TV Shows"
-        />
+        <Tab sx={style} label="Movies" />
+        <Tab sx={style} label="TV Shows" />
       </Tabs>
     </Box>
   );

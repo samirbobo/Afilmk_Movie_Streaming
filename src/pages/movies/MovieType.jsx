@@ -22,6 +22,7 @@ const ITEMS_PER_UI_PAGE = 60; // number of movies in one page
 const MovieType = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [filters, setFilters] = useState({ rate: "", sort: "", year: null });
   const { movieType } = useParams();
   const { movieGenres } = UseGlobalGenres();
   const [page, setPage] = useState(1);
@@ -32,10 +33,16 @@ const MovieType = () => {
 
   // بنجيب فقط أول صفحة عشان نعرف عدد النتائج الإجمالي
   const { data: firstPageMeta } = useQuery({
-    queryKey: ["movie-meta", movieType],
+    queryKey: ["movie-meta", movieType, filters],
     queryFn: () =>
       axios.get(
-        `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${movieId.id}&language=en-US&page=1&sort_by=popularity.desc`
+        `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${
+          movieId.id
+        }&language=en-US&page=1${
+          filters.sort ? `&sort_by=${filters.sort}` : ""
+        }${filters.year ? `&primary_release_year=${filters.year}` : ""}${
+          filters.rate ? `&vote_average.gte=${filters.rate}` : ""
+        }&vote_count.gte=50`
       ),
     select: (res) => ({
       totalResults: res.data.total_results,
@@ -54,18 +61,29 @@ const MovieType = () => {
     return [start, start + 1, start + 2];
   };
 
+  const onApplyFilters = (filterData) => {
+    setFilters(filterData); // Update parent state with filter data
+    setPage(1);
+  };
+
   const {
     data: movies,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["movie", movieType, page],
+    queryKey: ["movie", movieType, page, filters],
     queryFn: async () => {
       const pages = getApiPages(page);
       const responses = await Promise.all(
         pages.map((p) =>
           axios.get(
-            `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${movieId?.id}&language=en-US&page=${p}&sort_by=popularity.desc`
+            `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${
+              movieId?.id
+            }&language=en-US&page=${p}${
+              filters.sort ? `&sort_by=${filters.sort}` : ""
+            }${filters.year ? `&primary_release_year=${filters.year}` : ""}${
+              filters.rate ? `&vote_average.gte=${filters.rate}` : ""
+            }&vote_count.gte=50`
           )
         )
       );
@@ -94,7 +112,7 @@ const MovieType = () => {
           subTitle={`Explore the best of ${movieType} movies, carefully picked for your mood`}
         />
 
-        <FilterMenu />
+        <FilterMenu onApplyFilters={onApplyFilters} />
 
         {isLoading ? (
           <Typography sx={{ textAlign: "center", py: 4, height: "40vh" }}>
@@ -108,17 +126,19 @@ const MovieType = () => {
           <MediaList data={movies} genresType={0} section={"MovieType"} />
         )}
 
-        <Pagination
-          count={totalCustomPages}
-          size={isSmallScreen ? "small" : "medium"}
-          page={page}
-          onChange={(e, value) => {
-            setPage(value);
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-          color="primary"
-          sx={{ mt: 4, display: "flex", justifyContent: "center" }}
-        />
+        {totalCustomPages > 1 && (
+          <Pagination
+            count={totalCustomPages}
+            size={isSmallScreen ? "small" : "medium"}
+            page={page}
+            onChange={(e, value) => {
+              setPage(value);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            color="primary"
+            sx={{ mt: 4, display: "flex", justifyContent: "center" }}
+          />
+        )}
       </Container>
     </>
   );

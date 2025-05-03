@@ -1,20 +1,19 @@
-import { Container, Stack, Typography, useTheme } from "@mui/material";
+import { Container } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import MediaTabs from "../../../components/MediaTabs";
 import MediaList from "../../../components/MediaList";
 import { API_KEY, BASE_URL } from "../../../baseUrl";
+import HeaderSection from "../../../components/HeaderSection";
 
 const fetchPopularMedia = (type) =>
   axios
     .get(`${BASE_URL}/${type}/popular?api_key=${API_KEY}`)
-    .then((data) => data.data.results.slice(0, 12));
+    .then((data) =>
+      data.data.results.filter((item) => item.poster_path).slice(0, 12)
+    );
 
 const Popular = () => {
-  const navigate = useNavigate();
-  const theme = useTheme();
   const [selectedTab, setSelectedTab] = useState(0);
 
   const handleTabChange = (event, newValue) => {
@@ -58,33 +57,12 @@ const Popular = () => {
       }}
     >
       {/* Header of section */}
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        pb={1.5}
-        // gap={{ xs: 1, md: 4 }}
-      >
-        <Typography
-          variant="h2"
-          onClick={() => navigate("popular")}
-          sx={{
-            fontSize: "24px",
-            fontWeight: 900,
-            letterSpacing: 0,
-            lineHeight: "32px",
-            cursor: "pointer",
-            transition: "0.2s linear",
-            ":hover": {
-              color: theme.palette.primary.main,
-            },
-          }}
-        >
-          Popular
-        </Typography>
-
-        <MediaTabs tabIndex={selectedTab} handleChange={handleTabChange} />
-      </Stack>
+      <HeaderSection
+        link="/popular"
+        title="Popular"
+        selectedTab={selectedTab}
+        handleTabChange={handleTabChange}
+      />
 
       <MediaList
         data={selectedTab === 0 ? popularMovies : popularTvShows}

@@ -11,7 +11,9 @@ const Trending = () => {
     queryFn: () =>
       axios.get(`${BASE_URL}/trending/all/week?api_key=${API_KEY}`),
     select: (data) =>
-      data.data.results.filter((item) => item.media_type !== "person"),
+      data.data.results.filter(
+        (item) => item.media_type !== "person" && item.poster_path
+      ),
   });
 
   if (isLoading) {
@@ -42,8 +44,8 @@ const Trending = () => {
         <Typography
           variant="h2"
           sx={{
-            fontSize: "24px",
-            fontWeight: 900,
+            fontSize: { xs: "18px", sm: "24px" },
+            fontWeight: { xs: 700, sm: 900 },
             letterSpacing: 0,
             lineHeight: "32px",
           }}

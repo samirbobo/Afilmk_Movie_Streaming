@@ -1,21 +1,19 @@
-import { Container, Stack, Typography, useTheme } from "@mui/material";
+import { Container } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { API_KEY, BASE_URL } from "../../../baseUrl";
-import MediaTabs from "../../../components/MediaTabs";
 import MediaList from "../../../components/MediaList";
+import HeaderSection from "../../../components/HeaderSection";
 
-// دالة مساعدة لجلب البيانات
 const fetchTopRated = (type) =>
   axios
     .get(`${BASE_URL}/${type}/top_rated?api_key=${API_KEY}`)
-    .then((res) => res.data.results.slice(0, 12));
+    .then((res) =>
+      res.data.results.filter((item) => item.poster_path).slice(0, 12)
+    );
 
 const TopRated = () => {
-  const navigate = useNavigate();
-  const theme = useTheme();
   const [selectedTab, setSelectedTab] = useState(0);
 
   const handleTabChange = (event, newValue) => {
@@ -58,32 +56,12 @@ const TopRated = () => {
       }}
     >
       {/* Header of section */}
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        pb={1.5}
-        // gap={{ xs: 1, md: 4 }}
-      >
-        <Typography
-          variant="h2"
-          onClick={() => navigate("/top-rated")}
-          sx={{
-            fontSize: "24px",
-            fontWeight: 900,
-            letterSpacing: 0,
-            lineHeight: "32px",
-            cursor: "pointer",
-            transition: "0.2s linear",
-            "&:hover": {
-              color: theme.palette.primary.main,
-            },
-          }}
-        >
-          Top Rated
-        </Typography>
-        <MediaTabs tabIndex={selectedTab} handleChange={handleTabChange} />
-      </Stack>
+      <HeaderSection
+        link="/top-rated"
+        title="Top Rated"
+        selectedTab={selectedTab}
+        handleTabChange={handleTabChange}
+      />
 
       <MediaList
         data={selectedTab === 0 ? topMovies : topTvShows}
