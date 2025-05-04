@@ -8,11 +8,16 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { sortOptions, ratingOptions } from "../constants";
+import {
+  movieSortOptions,
+  ratingOptions,
+  tvSortOptions,
+  upComingOptions,
+} from "../constants";
 
-const FilterMenu = ({ onApplyFilters, section }) => {
+const FilterMenu = ({ onApplyFilters, section, sortData }) => {
   const [rate, setRate] = useState("");
   const [sort, setSort] = useState("");
   const [year, setYear] = useState(null);
@@ -20,6 +25,16 @@ const FilterMenu = ({ onApplyFilters, section }) => {
   const startYear = 1990;
   const endYear = new Date().getFullYear();
   let yearsArray = [];
+  // const chooseSort = section === "Upcoming" ? upComingOptions : sortOptions;
+  const sortOptions = sortData
+    ? sortData
+    : mediaType === "Movies"
+    ? movieSortOptions
+    : tvSortOptions;
+
+  useEffect(() => {
+    setSort("");
+  }, [mediaType]);
 
   for (let i = endYear; i >= startYear; i--) {
     yearsArray.push(i);
@@ -118,30 +133,32 @@ const FilterMenu = ({ onApplyFilters, section }) => {
         gap={2}
         flex={1}
       >
-        <FormControl size="small" sx={styleWidth} variant="outlined">
-          <Select
-            displayEmpty
-            value={rate}
-            onChange={handleChangeRate}
-            IconComponent={KeyboardArrowDownIcon}
-            renderValue={(selected) => {
-              if (!selected) {
-                return <p>Rating</p>; // Placeholder style
-              }
-              const selectedOption = ratingOptions.find(
-                (option) => option.value === selected
-              );
-              return selectedOption ? selectedOption.label : selected;
-            }}
-            sx={style}
-          >
-            {ratingOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {section !== "top-rated" && section !== "Upcoming" && (
+          <FormControl size="small" sx={styleWidth} variant="outlined">
+            <Select
+              displayEmpty
+              value={rate}
+              onChange={handleChangeRate}
+              IconComponent={KeyboardArrowDownIcon}
+              renderValue={(selected) => {
+                if (!selected) {
+                  return <p>Rating</p>; // Placeholder style
+                }
+                const selectedOption = ratingOptions.find(
+                  (option) => option.value === selected
+                );
+                return selectedOption ? selectedOption.label : selected;
+              }}
+              sx={style}
+            >
+              {ratingOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
         <FormControl size="small" sx={styleWidth} variant="outlined">
           <Select
             displayEmpty
@@ -180,35 +197,37 @@ const FilterMenu = ({ onApplyFilters, section }) => {
             </Select>
           </FormControl>
         )}
-        <Autocomplete
-          sx={styleWidth}
-          size="small"
-          options={yearsArray}
-          value={year}
-          onChange={(event, newValue) => handleChangeYear(newValue)}
-          disablePortal
-          popupIcon={<KeyboardArrowDownIcon />} // ← تغيير الأيقونة هنا
-          getOptionLabel={(option) => option.toString()}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              placeholder="Year" // ← بدل label
-              variant="outlined"
-              InputLabelProps={{ shrink: false }} // ← يمنع تحرك الـ label لفوق
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  cursor: "pointer",
-                  ...style,
-                  "& input::placeholder": {
-                    color: "white",
-                    opacity: 1,
+        {section !== "Upcoming" && (
+          <Autocomplete
+            sx={styleWidth}
+            size="small"
+            options={yearsArray}
+            value={year}
+            onChange={(event, newValue) => handleChangeYear(newValue)}
+            disablePortal
+            popupIcon={<KeyboardArrowDownIcon />} // ← تغيير الأيقونة هنا
+            getOptionLabel={(option) => option.toString()}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder="Year" // ← بدل label
+                variant="outlined"
+                InputLabelProps={{ shrink: false }} // ← يمنع تحرك الـ label لفوق
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    cursor: "pointer",
+                    ...style,
+                    "& input::placeholder": {
+                      color: "white",
+                      opacity: 1,
+                    },
+                    paddingRight: "35px",
                   },
-                  paddingRight: "35px",
-                },
-              }}
-            />
-          )}
-        />
+                }}
+              />
+            )}
+          />
+        )}
       </Stack>
 
       <Stack

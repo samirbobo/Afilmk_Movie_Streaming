@@ -15,6 +15,7 @@ import HeaderMediaType from "../../components/HeaderMediaType";
 import MediaList from "../../components/MediaList";
 import { useState } from "react";
 import FilterMenu from "../../components/FilterMenu";
+import { tvSortOptions } from "../../constants";
 
 const MAX_PAGES = 40;
 const ITEMS_PER_UI_PAGE = 60; // number of movies in one page
@@ -109,7 +110,7 @@ const TvType = () => {
           subTitle={`Explore the best of ${tvType} TV shows, carefully picked for your mood`}
         />
 
-        <FilterMenu onApplyFilters={onApplyFilters} />
+        <FilterMenu onApplyFilters={onApplyFilters} sortData={tvSortOptions} />
 
         {isLoading ? (
           <Typography sx={{ textAlign: "center", py: 4, height: "40vh" }}>

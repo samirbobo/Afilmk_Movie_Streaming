@@ -2,10 +2,28 @@ export const sortOptions = [
   { value: "", label: "Default Sort" },
   { value: "popularity.desc", label: "Most Popular" },
   { value: "popularity.asc", label: "Least Popular" },
-  { value: "primary_release_date.desc", label: "Newest Release" },
-  { value: "primary_release_date.asc", label: "Oldest Release" },
   { value: "vote_average.desc", label: "Highest Rated" },
   { value: "vote_average.asc", label: "Lowest Rated" },
+];
+
+export const movieSortOptions = [
+  ...sortOptions,
+  { value: "primary_release_date.desc", label: "Newest Release" },
+  { value: "primary_release_date.asc", label: "Oldest Release" },
+];
+
+export const tvSortOptions = [
+  ...sortOptions,
+  { value: "first_air_date.desc", label: "Newest Release" },
+  { value: "first_air_date.asc", label: "Oldest Release" },
+];
+
+export const upComingOptions = [
+  { value: "", label: "Default Sort" },
+  { value: "popularity.desc", label: "Most Popular" },
+  { value: "popularity.asc", label: "Least Popular" },
+  { value: "primary_release_date.desc", label: "Coming Soon" },
+  { value: "primary_release_date.asc", label: "Coming First" },
 ];
 
 export const ratingOptions = [

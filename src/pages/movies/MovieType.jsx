@@ -15,6 +15,7 @@ import HeaderMediaType from "../../components/HeaderMediaType";
 import MediaList from "../../components/MediaList";
 import { useState } from "react";
 import FilterMenu from "../../components/FilterMenu";
+import { movieSortOptions } from "../../constants";
 
 const MAX_PAGES = 40;
 const ITEMS_PER_UI_PAGE = 60; // number of movies in one page
@@ -22,7 +23,11 @@ const ITEMS_PER_UI_PAGE = 60; // number of movies in one page
 const MovieType = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const [filters, setFilters] = useState({ rate: "", sort: "", year: null });
+  const [filters, setFilters] = useState({
+    sort: "",
+    year: null,
+    mediaType: "Movies",
+  });
   const { movieType } = useParams();
   const { movieGenres } = UseGlobalGenres();
   const [page, setPage] = useState(1);
@@ -62,6 +67,7 @@ const MovieType = () => {
   };
 
   const onApplyFilters = (filterData) => {
+    console.log(filterData)
     setFilters(filterData); // Update parent state with filter data
     setPage(1);
   };
@@ -112,7 +118,10 @@ const MovieType = () => {
           subTitle={`Explore the best of ${movieType} movies, carefully picked for your mood`}
         />
 
-        <FilterMenu onApplyFilters={onApplyFilters} />
+        <FilterMenu
+          onApplyFilters={onApplyFilters}
+          sortData={movieSortOptions}
+        />
 
         {isLoading ? (
           <Typography sx={{ textAlign: "center", py: 4, height: "40vh" }}>

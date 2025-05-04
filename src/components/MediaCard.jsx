@@ -16,8 +16,8 @@ const MediaCard = ({ item, genresType, section }) => {
   const genres = isMovie ? movieGenres : tvShowGenres;
   const genreName = getGenreNames(item.genre_ids.slice(0, 1), genres).join("");
   let today = new Date().toISOString().split("T")[0];
-  const releaseDate =
-    today === item?.first_air_date ? "Today" : item?.first_air_date;
+  const time = item?.first_air_date ? item?.first_air_date : item?.release_date;
+  const releaseDate = today === time ? "Today" : time;
 
   return (
     <Card
@@ -153,7 +153,7 @@ const MediaCard = ({ item, genresType, section }) => {
             {item.media_type}
           </Typography>
         )}
-        {section === "Upcoming" && item?.first_air_date && (
+        {section === "Upcoming" && time && (
           <Typography
             sx={{
               display: "flex",
@@ -170,7 +170,7 @@ const MediaCard = ({ item, genresType, section }) => {
             {releaseDate}
           </Typography>
         )}
-        {item.vote_average > 0 && (
+        {item.vote_average > 0 && section !== "Upcoming" && (
           <Typography
             sx={{
               display: "flex",

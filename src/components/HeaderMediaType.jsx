@@ -8,7 +8,6 @@ const HeaderMediaType = ({ title, subTitle }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const pathNames = location.pathname.split("/");
-  console.log(pathNames)
 
   function handleClick(event, link) {
     event.preventDefault();
