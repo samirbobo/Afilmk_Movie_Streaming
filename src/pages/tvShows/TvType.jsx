@@ -13,7 +13,7 @@ import { API_KEY, BASE_URL } from "../../baseUrl";
 import { UseGlobalGenres } from "../../context/GenresContext";
 import HeaderMediaType from "../../components/HeaderMediaType";
 import MediaList from "../../components/MediaList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FilterMenu from "../../components/FilterMenu";
 import { tvSortOptions } from "../../constants";
 
@@ -93,6 +93,11 @@ const TvType = () => {
     keepPreviousData: true,
     enabled: !!tvId,
   });
+
+  // Scroll to top
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   return (
     <>

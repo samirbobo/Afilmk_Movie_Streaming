@@ -13,7 +13,7 @@ import { API_KEY, BASE_URL } from "../../baseUrl";
 import { UseGlobalGenres } from "../../context/GenresContext";
 import HeaderMediaType from "../../components/HeaderMediaType";
 import MediaList from "../../components/MediaList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FilterMenu from "../../components/FilterMenu";
 import { movieSortOptions } from "../../constants";
 
@@ -67,7 +67,7 @@ const MovieType = () => {
   };
 
   const onApplyFilters = (filterData) => {
-    console.log(filterData)
+    console.log(filterData);
     setFilters(filterData); // Update parent state with filter data
     setPage(1);
   };
@@ -101,6 +101,11 @@ const MovieType = () => {
     keepPreviousData: true,
     enabled: !!movieId,
   });
+
+  // Scroll to top
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   return (
     <>

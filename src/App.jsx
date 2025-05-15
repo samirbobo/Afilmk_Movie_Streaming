@@ -22,6 +22,8 @@ const Trending = lazy(() => import("./pages/Trending"));
 const TopRated = lazy(() => import("./pages/TopRated"));
 const Upcoming = lazy(() => import("./pages/Upcoming"));
 const Popular = lazy(() => import("./pages/Popular"));
+const MovieDetails = lazy(() => import("./pages/MovieDetails"));
+const TvShowDetails = lazy(() => import("./pages/TvShowDetails"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 // Material UI
@@ -34,10 +36,11 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 // Context
 import GenresProvider from "./context/GenresContext";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<RootLayout />}>
+    <Route path="/" element={<RootLayout />} errorElement={<ErrorBoundary />}>
       <Route index element={<Home />} />
 
       <Route path="movies" element={<Movies />} />
@@ -51,6 +54,9 @@ const router = createBrowserRouter(
       <Route path="top-rated" element={<TopRated />} />
       <Route path="upcoming" element={<Upcoming />} />
       <Route path="popular" element={<Popular />} />
+
+      <Route path="movie/:slug/:id" element={<MovieDetails />} />
+      <Route path="tv/:slug/:id" element={<TvShowDetails />} />
 
       <Route path="*" element={<NotFoundPage />} />
     </Route>
@@ -80,7 +86,10 @@ function App() {
           <GenresProvider>
             <RouterProvider router={router} />
           </GenresProvider>
-          <ReactQueryDevtools initialIsOpen={true} />
+          <ReactQueryDevtools
+            initialIsOpen={true}
+            buttonPosition="bottom-left"
+          />
         </QueryClientProvider>
       </ThemeProvider>
     </ColorModeContext.Provider>

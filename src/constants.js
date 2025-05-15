@@ -18,12 +18,20 @@ export const tvSortOptions = [
   { value: "first_air_date.asc", label: "Oldest Release" },
 ];
 
-export const upComingOptions = [
+export const upComingMovieOptions = [
   { value: "", label: "Default Sort" },
   { value: "popularity.desc", label: "Most Popular" },
   { value: "popularity.asc", label: "Least Popular" },
   { value: "primary_release_date.desc", label: "Coming Soon" },
   { value: "primary_release_date.asc", label: "Coming First" },
+];
+
+export const upComingTvOptions = [
+  { value: "", label: "Default Sort" },
+  { value: "popularity.desc", label: "Most Popular" },
+  { value: "popularity.asc", label: "Least Popular" },
+  { value: "first_air_date.desc", label: "Coming Soon" },
+  { value: "first_air_date.asc", label: "Coming First" },
 ];
 
 export const ratingOptions = [

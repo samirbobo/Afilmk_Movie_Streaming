@@ -1,0 +1,84 @@
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { API_KEY, BASE_URL } from "../baseUrl";
+import { useEffect } from "react";
+import { Box, Container, Stack, Toolbar } from "@mui/material";
+import MediaTypeDetailsImage from "../components/MediaTypeDetailsImage";
+import MediaTypeDescription from "../components/MediaTypeDescription";
+
+import MediaTypeDetails from "../components/MediaTypeDetails";
+import MediaTypeCast from "../components/MediaTypeCast";
+import MediaTypeReviews from "../components/MediaTypeReviews";
+
+const MovieDetails = () => {
+  const { slug, id } = useParams();
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["movie", slug, id],
+    queryFn: () =>
+      axios.get(
+        `${BASE_URL}/movie/${id}?api_key=${API_KEY}&append_to_response=videos,credits,reviews,recommendations`
+      ),
+    select: (data) => data.data,
+    enabled: !!id,
+  });
+  console.log(data);
+
+  // Scroll to top
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  if (isLoading) {
+    return "Loading...";
+  }
+
+  if (error) {
+    return "Error...";
+  }
+
+  return (
+    <>
+      <Toolbar />
+      <Container
+        sx={{
+          px: { xs: "1rem", sm: "3rem", md: "4rem" },
+          py: 2,
+          maxWidth: "1920px !important",
+        }}
+      >
+        {/* Image of Movie */}
+        <MediaTypeDetailsImage data={data} />
+
+        <Stack
+          sx={{
+            flexDirection: { xs: "column", sm: "row" },
+            justifyContent: "space-between",
+            alignItems: "start",
+            gap: 2.5,
+          }}
+        >
+          <Box
+            sx={{
+              flexBasis: { xs: "100%", sm: "calc(65% - 10px)" },
+              maxWidth: { xs: "100%", sm: "calc(65% - 10px)" },
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+            }}
+          >
+            <MediaTypeDescription data={data} />
+            {/* GET https://api.themoviedb.org/3/person/{person_id}?api_key=YOUR_API_KEY&language=en-US */}
+            {/* MediaTypeCast عايزين نعمل بوبه فيها كل بيانات الممثل لما حد يدوس علي صوره في مكون ال  */}
+            <MediaTypeCast data={data} />
+            <MediaTypeReviews data={data} />
+          </Box>
+
+          <MediaTypeDetails data={data} />
+        </Stack>
+      </Container>
+    </>
+  );
+};
+
+export default MovieDetails;

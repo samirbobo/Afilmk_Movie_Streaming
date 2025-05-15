@@ -14,7 +14,8 @@ const MediaCard = ({ item, genresType, section }) => {
   const isMovie =
     genresType === undefined ? item?.media_type === "movie" : genresType === 0;
   const genres = isMovie ? movieGenres : tvShowGenres;
-  const genreName = getGenreNames(item.genre_ids.slice(0, 1), genres).join("");
+  const genre_ids = item.genre_ids ? item.genre_ids : [];
+  const genreName = getGenreNames(genre_ids.slice(0, 1), genres).join("");
   let today = new Date().toISOString().split("T")[0];
   const time = item?.first_air_date ? item?.first_air_date : item?.release_date;
   const releaseDate = today === time ? "Today" : time;
@@ -40,7 +41,13 @@ const MediaCard = ({ item, genresType, section }) => {
       <CardMedia
         component="img"
         loading="lazy"
-        image={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+        image={`https://image.tmdb.org/t/p/w342${item.poster_path}`}
+        srcSet={`
+          https://image.tmdb.org/t/p/w185${item.poster_path} 185w,
+          https://image.tmdb.org/t/p/w342${item.poster_path} 342w,
+          https://image.tmdb.org/t/p/w500${item.poster_path} 500w
+        `}
+        sizes="(max-width: 768px) 185px, (max-width: 1200px) 342px, 500px"
         alt={item.title || item.name}
         sx={{ borderRadius: 2, height: "100%", objectFit: "cover" }}
       />
@@ -153,7 +160,7 @@ const MediaCard = ({ item, genresType, section }) => {
             {item.media_type}
           </Typography>
         )}
-        {section === "Upcoming" && time && (
+        {(section === "Upcoming" || section === "LatestAdditions") && time && (
           <Typography
             sx={{
               display: "flex",

@@ -24,6 +24,10 @@ body {
   font-family: "Inter", "Poppins", sans-serif;
 }
 
+a {
+  text-decoration: none;
+}
+
 .btn {
   background: var(--btn-color);
   border-radius: 0.25rem;

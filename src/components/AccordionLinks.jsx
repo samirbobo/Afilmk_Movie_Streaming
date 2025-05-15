@@ -9,8 +9,23 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-const AccordionLinks = ({ title, links }) => {
+const AccordionLinks = ({ title, links, toggleDrawer }) => {
+  const navigate = useNavigate();
+
+  const handleNavigation = (link) => {
+    const basePath = title === "Movies" ? "movies" : "tv-shows";
+    const linkName = link.name || "All"; // لو اللينك مش موجود بخليه يروح علي الصفحه العامه افضل
+    const path =
+      linkName === "All"
+        ? `/${basePath}`
+        : `/${basePath}/${linkName.toLowerCase()}`;
+    navigate(path);
+    console.log("Calling toggleDrawer(false)");
+    toggleDrawer(false);
+  };
+
   return (
     <Accordion
       elevation={0} // نسبه الشادو الي معمول
@@ -26,7 +41,7 @@ const AccordionLinks = ({ title, links }) => {
       <List sx={{ py: 0 }}>
         {links.map((link) => (
           <ListItem key={link.id} sx={{ py: 0, px: 1, my: -1 }}>
-            <ListItemButton>
+            <ListItemButton onClick={() => handleNavigation(link)}>
               <ListItemText
                 primary={link.name}
                 sx={{

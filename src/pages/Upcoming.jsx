@@ -11,7 +11,7 @@ import axios from "axios";
 import { API_KEY, BASE_URL } from "../baseUrl";
 import HeaderMediaType from "../components/HeaderMediaType";
 import MediaList from "../components/MediaList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FilterMenu from "../components/FilterMenu";
 
 const MAX_PAGES = 40;
@@ -91,6 +91,11 @@ const Upcoming = () => {
     },
     keepPreviousData: true,
   });
+
+  // Scroll to top
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const title =
     filters.mediaType === "Movies" ? "Upcoming Movies" : "Upcoming TV Shows";

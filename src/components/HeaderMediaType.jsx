@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import { Box, Breadcrumbs, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Typography, useTheme } from "@mui/material";
 import Link from "@mui/material/Link";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const HeaderMediaType = ({ title, subTitle }) => {
+  const theme = useTheme()
   const navigate = useNavigate();
   const location = useLocation();
   const pathNames = location.pathname.split("/");
@@ -36,7 +37,7 @@ const HeaderMediaType = ({ title, subTitle }) => {
       <Typography
         variant="h2"
         sx={{
-          color: "hsla(0,0%,100%,.75)",
+          color: theme.palette.mode === "dark" ? "hsla(0,0%,100%,.75)" : theme.palette.text.primary,
           fontSize: { xs: "14px", md: "16px" },
           fontWeight: 500,
           lineHeight: { xs: "20px", md: "24px" },

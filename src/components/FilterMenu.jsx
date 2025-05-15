@@ -7,6 +7,7 @@ import {
   Select,
   Stack,
   TextField,
+  useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -14,10 +15,12 @@ import {
   movieSortOptions,
   ratingOptions,
   tvSortOptions,
-  upComingOptions,
+  upComingMovieOptions,
+  upComingTvOptions,
 } from "../constants";
 
 const FilterMenu = ({ onApplyFilters, section, sortData }) => {
+  const theme = useTheme();
   const [rate, setRate] = useState("");
   const [sort, setSort] = useState("");
   const [year, setYear] = useState(null);
@@ -25,12 +28,15 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
   const startYear = 1990;
   const endYear = new Date().getFullYear();
   let yearsArray = [];
-  // const chooseSort = section === "Upcoming" ? upComingOptions : sortOptions;
-  const sortOptions = sortData
-    ? sortData
-    : mediaType === "Movies"
-    ? movieSortOptions
-    : tvSortOptions;
+  const sortOptions =
+    sortData ??
+    (section === "Upcoming"
+      ? mediaType === "Movies"
+        ? upComingMovieOptions
+        : upComingTvOptions
+      : mediaType === "Movies"
+      ? movieSortOptions
+      : tvSortOptions);
 
   useEffect(() => {
     setSort("");
@@ -72,7 +78,7 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
 
   const handleChangeMediaType = (event) => {
     setMediaType(event.target.value);
-    if (!sort && !rate && !year && event.target.value === "Movies") {
+    if (!rate && !year && event.target.value === "Movies") {
       const filters = { rate: "", sort: "", year: null, mediaType: "Movies" };
       onApplyFilters(filters);
     }
@@ -159,30 +165,32 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
             </Select>
           </FormControl>
         )}
-        <FormControl size="small" sx={styleWidth} variant="outlined">
-          <Select
-            displayEmpty
-            value={sort}
-            onChange={handleChangeSort}
-            IconComponent={KeyboardArrowDownIcon}
-            renderValue={(selected) => {
-              if (!selected) {
-                return <p>Sort</p>;
-              }
-              const selectedOption = sortOptions.find(
-                (option) => option.value === selected
-              );
-              return selectedOption ? selectedOption.label : selected;
-            }}
-            sx={style}
-          >
-            {sortOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {section !== "popular" && section !== "LatestAdditions" && (
+          <FormControl size="small" sx={styleWidth} variant="outlined">
+            <Select
+              displayEmpty
+              value={sort}
+              onChange={handleChangeSort}
+              IconComponent={KeyboardArrowDownIcon}
+              renderValue={(selected) => {
+                if (!selected) {
+                  return <p>Sort</p>;
+                }
+                const selectedOption = sortOptions.find(
+                  (option) => option.value === selected
+                );
+                return selectedOption ? selectedOption.label : selected;
+              }}
+              sx={style}
+            >
+              {sortOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
         {section && (
           <FormControl size="small" sx={styleWidth} variant="outlined">
             <Select
@@ -197,7 +205,7 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
             </Select>
           </FormControl>
         )}
-        {section !== "Upcoming" && (
+        {section !== "Upcoming" && section !== "LatestAdditions" && (
           <Autocomplete
             sx={styleWidth}
             size="small"
@@ -218,7 +226,7 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
                     cursor: "pointer",
                     ...style,
                     "& input::placeholder": {
-                      color: "white",
+                      color: theme.palette.text.primary,
                       opacity: 1,
                     },
                     paddingRight: "35px",

@@ -1,23 +1,22 @@
 /* eslint-disable react/prop-types */
-import { Close, Menu, Search } from "@mui/icons-material";
+import { Menu, Search } from "@mui/icons-material";
 import {
   AppBar,
   Box,
-  Divider,
-  Drawer,
   IconButton,
   Slide,
   Toolbar,
   Typography,
   useScrollTrigger,
+  useTheme,
 } from "@mui/material";
 import { cloneElement, useState } from "react";
 
 import ToggleMode from "./ToggleMode";
 import { UseGlobalGenres } from "../context/GenresContext";
 import Links from "./Links";
-import AccordionLinks from "./AccordionLinks";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Sidebar from "./Sidebar";
 
 // hide navbar animation when the user scroll down and show it again when the user scroll up
 function HideOnScroll(props) {
@@ -47,6 +46,7 @@ function HideOnScroll(props) {
 }
 
 const Navbar = (props) => {
+  const theme = useTheme();
   const {
     movieGenres,
     isMoviesLoading,
@@ -60,20 +60,18 @@ const Navbar = (props) => {
   const [state, setState] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
-  const toggleDrawer = (open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-
+  const toggleDrawer = (open) => {
     setState(open);
   };
 
   const handleSearchToggle = () => {
     setSearchOpen((prevState) => !prevState);
   };
+
+  const elevationTrigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0,
+  });
 
   if (isMoviesLoading || isTvShowsLoading) {
     return "Loading..";
@@ -82,16 +80,21 @@ const Navbar = (props) => {
   return (
     <>
       <HideOnScroll {...props}>
-        <AppBar component="nav">
+        <AppBar component="nav" elevation={0}>
           <Toolbar>
             {/* Logo */}
-            <Typography
-              variant="h6"
-              sx={{ flexGrow: 1, cursor: "pointer" }}
-              onClick={() => navigate("/")}
-            >
-              Aflamk
-            </Typography>
+            <Link to={"/"} style={{ flexGrow: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  color: !elevationTrigger
+                    ? "#fff"
+                    : theme.palette.text.primary,
+                }}
+              >
+                Aflamk
+              </Typography>
+            </Link>
 
             {/* Links */}
             <Box
@@ -104,6 +107,7 @@ const Navbar = (props) => {
             >
               <Links
                 title="Movies"
+                scrollTrigger={elevationTrigger}
                 data={
                   moviesError
                     ? [{ id: "all", name: "All" }]
@@ -112,36 +116,48 @@ const Navbar = (props) => {
               />
               <Links
                 title="Tv Shows"
+                scrollTrigger={elevationTrigger}
                 data={
                   tvShowsError
                     ? [{ id: "all", name: "All" }]
                     : [{ id: "all", name: "All" }, ...tvShowGenres]
                 }
               />
-              <Typography
-                component={"li"}
-                variant="body1"
-                sx={{ cursor: "pointer", listStyle: "none" }}
-              >
-                Latest Additions
-              </Typography>
+              <Link to={"/latest-additions"}>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: !elevationTrigger
+                      ? "#fff"
+                      : theme.palette.text.primary,
+                  }}
+                >
+                  Latest Additions
+                </Typography>
+              </Link>
             </Box>
 
             <IconButton
               aria-label="open search"
               size="small"
               onClick={handleSearchToggle}
-              sx={{ ml: 1 }}
+              sx={{
+                ml: 1,
+                color: !elevationTrigger ? "#fff" : theme.palette.text.primary,
+              }}
             >
               <Search />
             </IconButton>
 
-            <ToggleMode />
+            <ToggleMode scrollTrigger={elevationTrigger} />
 
             <IconButton
               aria-label="open drawer"
-              onClick={toggleDrawer(true)}
-              sx={{ display: { sm: "none" } }}
+              onClick={() => toggleDrawer(true)}
+              sx={{
+                display: { sm: "none" },
+                color: !elevationTrigger ? "#fff" : theme.palette.text.primary,
+              }}
             >
               <Menu />
             </IconButton>
@@ -149,64 +165,7 @@ const Navbar = (props) => {
         </AppBar>
       </HideOnScroll>
 
-      <Drawer
-        sx={{
-          ".MuiPaper-root.css-k1yagv-MuiPaper-root-MuiDrawer-paper": {
-            height: "100%",
-          },
-        }}
-        anchor={"left"}
-        open={state}
-        onClose={toggleDrawer(false)}
-      >
-        <Box
-          sx={{
-            width: "90vw",
-            maxWidth: 450,
-            mx: "auto",
-            mt: 6,
-            position: "relative",
-            pt: 10,
-          }}
-        >
-          <IconButton
-            onClick={toggleDrawer(false)}
-            sx={{
-              position: "absolute",
-              top: 0,
-              right: 10,
-              transition: "0.3s",
-              ":hover": { color: "red", transform: "rotate(180deg)" },
-            }}
-          >
-            <Close />
-          </IconButton>
-
-          <AccordionLinks
-            title="Movies"
-            links={
-              moviesError
-                ? [{ id: "all", name: "All" }]
-                : [{ id: "all", name: "All" }, ...movieGenres]
-            }
-          />
-          <AccordionLinks
-            title="Tv Shows"
-            links={
-              tvShowsError
-                ? [{ id: "all", name: "All" }]
-                : [{ id: "all", name: "All" }, ...tvShowGenres]
-            }
-          />
-          <Divider />
-          <Typography
-            variant="h6"
-            sx={{ cursor: "pointer", py: "12px", px: 2 }}
-          >
-            Latest Additions
-          </Typography>
-        </Box>
-      </Drawer>
+      <Sidebar state={state} toggleDrawer={toggleDrawer} />
     </>
   );
 };

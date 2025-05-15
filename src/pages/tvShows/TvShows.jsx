@@ -55,6 +55,11 @@ const TvShows = () => {
     };
   }, [tvShowGenres, visibleSections, isAnyLoading]);
 
+  // Scroll to top
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <>
       <Toolbar />
@@ -100,8 +105,8 @@ const TvShows = () => {
                   <Typography
                     variant="h2"
                     sx={{
-                      fontSize: "24px",
-                      fontWeight: 900,
+                      fontSize: { xs: "18px", sm: "24px" },
+                      fontWeight: { xs: 700, sm: 900 },
                       letterSpacing: 0,
                       lineHeight: "32px",
                     }}
@@ -111,7 +116,7 @@ const TvShows = () => {
                   <ShowMoreBtn link={genre.name.toLowerCase()} />
                 </Stack>
 
-                {movies && <MediaCarousel data={movies}/>}
+                {movies && <MediaCarousel data={movies} />}
               </Box>
             );
           }

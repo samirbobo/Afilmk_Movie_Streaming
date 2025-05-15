@@ -1,6 +1,13 @@
-import { Container, Pagination, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Container,
+  Pagination,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import HeaderMediaType from "../components/HeaderMediaType";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { API_KEY, BASE_URL } from "../baseUrl";
 import axios from "axios";
@@ -52,6 +59,11 @@ const Trending = () => {
     },
     keepPreviousData: true,
   });
+
+  // Scroll to top
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   return (
     <>

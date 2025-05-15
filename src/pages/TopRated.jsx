@@ -11,7 +11,7 @@ import axios from "axios";
 import { API_KEY, BASE_URL } from "../baseUrl";
 import HeaderMediaType from "../components/HeaderMediaType";
 import MediaList from "../components/MediaList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FilterMenu from "../components/FilterMenu";
 
 const MAX_PAGES = 40;
@@ -63,7 +63,6 @@ const TopRated = () => {
   };
 
   const onApplyFilters = (filterData) => {
-    console.log(filterData);
     setFilters(filterData); // Update parent state with filter data
     setPage(1);
   };
@@ -100,6 +99,11 @@ const TopRated = () => {
     keepPreviousData: true,
   });
 
+  // Scroll to top
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   const title =
     filters.mediaType === "Movies" ? "Top Rated Movies" : "Top Rated TV Shows";
 
@@ -120,10 +124,7 @@ const TopRated = () => {
       >
         <HeaderMediaType title={title} subTitle={subTitle} />
 
-        <FilterMenu
-          onApplyFilters={onApplyFilters}
-          section={"top-rated"}
-        />
+        <FilterMenu onApplyFilters={onApplyFilters} section={"top-rated"} />
 
         {isLoading ? (
           <Typography sx={{ textAlign: "center", py: 4, height: "40vh" }}>
@@ -134,7 +135,10 @@ const TopRated = () => {
             Error
           </Typography>
         ) : (
-          <MediaList data={data} genresType={0} />
+          <MediaList
+            data={data}
+            genresType={filters.mediaType === "Movies" ? 0 : 1}
+          />
         )}
 
         {totalCustomPages > 1 && (

@@ -9,10 +9,12 @@ import {
   ListItemText,
   Paper,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const Links = ({ title, data }) => {
+const Links = ({ title, scrollTrigger, data }) => {
+  const theme = useTheme();
   const navigate = useNavigate();
 
   const handleNavigation = (link) => {
@@ -36,8 +38,19 @@ const Links = ({ title, data }) => {
         ":hover .box-links": { display: "block" },
       }}
     >
-      <Typography variant="body1">{title}</Typography>
-      <ExpandMore sx={{ fontSize: "16px", ml: 1 }} />
+      <Typography
+        variant="body1"
+        sx={{ color: !scrollTrigger ? "#fff" : theme.palette.text.primary }}
+      >
+        {title}
+      </Typography>
+      <ExpandMore
+        sx={{
+          fontSize: "16px",
+          ml: 1,
+          color: !scrollTrigger ? "#fff" : theme.palette.text.primary,
+        }}
+      />
 
       {/* هنا البوكس الي فيه كل الينكات */}
       <List
@@ -58,7 +71,6 @@ const Links = ({ title, data }) => {
               <Grid item xs={4} key={link.id}>
                 <ListItem disablePadding>
                   <ListItemButton
-                    onClick={() => handleNavigation(link)}
                     sx={{
                       display: "flex",
                       py: "6px",
