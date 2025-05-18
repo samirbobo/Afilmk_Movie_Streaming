@@ -40,14 +40,14 @@ const MediaTypeReviews = ({ data }) => {
     setOpen(false);
   };
 
-  console.log(data);
+  if (reviews.length < 1) return;
 
   return (
     <Box
       component={"article"}
       sx={{
         background: "#1A1A1A",
-        p: "40px",
+        p: { xs: "24px", md: "40px" },
         borderRadius: "10px",
         border: "1px solid #262626",
         overflow: "hidden",
@@ -60,14 +60,14 @@ const MediaTypeReviews = ({ data }) => {
           alignItems: "center",
           justifyContent: "space-between",
           gap: "30px",
-          mb: "20px",
+          mb: { xs: "1rem", md: "20px" },
         }}
       >
         <Typography
           variant="h3"
           sx={{
             color: theme.palette.text.secondary,
-            fontSize: 18,
+            fontSize: { xs: 16, md: 18 },
           }}
         >
           Reviews
@@ -94,157 +94,135 @@ const MediaTypeReviews = ({ data }) => {
           slidesPerGroup={2} // عند التنقل بالسهم يتحرك بـ 2 دفعة واحدة
           breakpoints={{
             1024: { slidesPerView: 2, slidesPerGroup: 2 },
-            768: { slidesPerView: 1, slidesPerGroup: 1 },
-            480: { slidesPerView: 1, slidesPerGroup: 1 },
             0: { slidesPerView: 1, slidesPerGroup: 1 },
           }}
         >
-          {reviews.length > 0 ? (
-            reviews.map((review) => {
-              const content =
-                review.content.slice(0, 400) +
-                (review.content.length > 400 ? "..." : "");
+          {reviews.map((review) => {
+            const content =
+              review.content.slice(0, 400) +
+              (review.content.length > 400 ? "..." : "");
 
-              const rating = review?.author_details?.rating
-                ? Math.min(review.author_details.rating / 2, 5)
-                : 0;
+            const rating = review?.author_details?.rating
+              ? Math.min(review.author_details.rating / 2, 5)
+              : 0;
 
-              return (
-                <SwiperSlide
-                  key={review.id}
-                  style={{
+            return (
+              <SwiperSlide
+                key={review.id}
+                style={{
+                  borderRadius: "12px",
+                  background: "#0F0F0F",
+                  border: "2px solid #262626",
+                  overflow: "hidden",
+                  boxSizing: "border-box",
+                }}
+              >
+                <Box
+                  sx={{
+                    padding: "24px",
                     borderRadius: "12px",
-                    background: "#0F0F0F",
-                    border: "2px solid #262626",
-                    overflow: "hidden",
-                    boxSizing: "border-box",
                   }}
                 >
-                  <Box
+                  {/* Header of Card */}
+                  <Stack
                     sx={{
-                      padding: "30px",
-                      borderRadius: "12px",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "10px",
+                      flexWrap: "wrap",
+                      mb: "16px",
                     }}
                   >
-                    {/* Header of Card */}
+                    <Typography
+                      variant="h4"
+                      title={review.author}
+                      sx={{
+                        fontSize: 18,
+                        color: theme.palette.text.primary,
+                        maxWidth: "155px",
+                        minWidth: "100px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        textWrap: "nowrap",
+                        flex: 1,
+                        textAlign: "left",
+                      }}
+                    >
+                      {review.author}
+                    </Typography>
+
+                    {/* Rating Of Movie */}
                     <Stack
                       sx={{
                         flexDirection: "row",
                         alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: "10px",
-                        mb: "16px",
+                        gap: 0.5,
+                        p: "4px 8px",
+                        borderRadius: "50px",
+                        background: "#141414",
+                        border: "1px solid #262626",
                       }}
                     >
-                      <Stack
+                      <Rating
+                        name="half-rating-read"
+                        defaultValue={rating}
+                        precision={0.5}
+                        readOnly
+                        emptyIcon={<StarRoundedIcon fontSize="inherit" />}
                         sx={{
-                          flexDirection: "column",
-                          alignItems: "flex-start",
-                          gap: 0.5,
-                          width: "50%",
+                          "& .MuiRating-iconFilled": {
+                            color: theme.palette.secondary.main, // لون النجوم المملوءة
+                          },
+                          "& .MuiRating-iconEmpty": {
+                            color: theme.palette.text.secondary, // لون النجوم الفارغة (اختياري)
+                          },
+                        }}
+                      />
+
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: theme.palette.text.secondary,
+                          fontSize: "14px",
                         }}
                       >
-                        <Typography
-                          variant="h4"
-                          title={review.author}
-                          sx={{
-                            fontSize: 18,
-                            color: theme.palette.text.primary,
-                            maxWidth: "155px",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            textWrap: "nowrap",
-                            width: "100%",
-                            textAlign: "left",
-                          }}
-                        >
-                          {review.author}
-                        </Typography>
-                        <Typography
-                          variant="h5"
-                          sx={{
-                            fontSize: 16,
-                            color: theme.palette.text.secondary,
-                          }}
-                        >
-                          {review.updated_at.split("T")[0]}
-                        </Typography>
-                      </Stack>
-
-                      <Stack
-                        sx={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gap: 0.5,
-                          p: "4px 8px",
-                          borderRadius: "50px",
-                          background: "#141414",
-                          border: "1px solid #262626",
-                        }}
-                      >
-                        <Rating
-                          name="half-rating-read"
-                          defaultValue={rating}
-                          precision={0.5}
-                          readOnly
-                          emptyIcon={<StarRoundedIcon fontSize="inherit" />}
-                          sx={{
-                            "& .MuiRating-iconFilled": {
-                              color: theme.palette.secondary.main, // لون النجوم المملوءة
-                            },
-                            "& .MuiRating-iconEmpty": {
-                              color: theme.palette.text.secondary, // لون النجوم الفارغة (اختياري)
-                            },
-                          }}
-                        />
-
-                        <Typography
-                          variant="body1"
-                          sx={{
-                            color: theme.palette.text.secondary,
-                            fontSize: "14px",
-                          }}
-                        >
-                          {rating}
-                        </Typography>
-                      </Stack>
+                        {rating}
+                      </Typography>
                     </Stack>
+                  </Stack>
 
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        fontSize: 16,
-                        color: theme.palette.text.secondary,
-                        textAlign: "start",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 5, // ✅ عدد السطور
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        mb: "30px",
-                      }}
+                  {/* content of Review */}
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      fontSize: 16,
+                      color: theme.palette.text.secondary,
+                      textAlign: "start",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 5, // ✅ عدد السطور
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      mb: "30px",
+                    }}
+                  >
+                    {parse(content)}
+                  </Typography>
+
+                  {review.content.length > 400 && (
+                    <Button
+                      size="small"
+                      variant="contained"
+                      onClick={handleClickOpen("paper", review)}
                     >
-                      {parse(content)}
-                    </Typography>
-
-                    {review.content.length > 400 && (
-                      <Button
-                        size="small"
-                        variant="contained"
-                        onClick={handleClickOpen("paper", review)}
-                      >
-                        Show more
-                      </Button>
-                    )}
-                  </Box>
-                </SwiperSlide>
-              );
-            })
-          ) : (
-            <Typography sx={{ color: theme.palette.text.secondary }}>
-              No cast information available.
-            </Typography>
-          )}
+                      Show more
+                    </Button>
+                  )}
+                </Box>
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       </Box>
 

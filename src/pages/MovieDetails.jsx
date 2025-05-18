@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { API_KEY, BASE_URL } from "../baseUrl";
 import { useEffect } from "react";
-import { Box, Container, Stack, Toolbar } from "@mui/material";
+import { Box, Container, Stack, Toolbar, useMediaQuery } from "@mui/material";
 import MediaTypeDetailsImage from "../components/MediaTypeDetailsImage";
 import MediaTypeDescription from "../components/MediaTypeDescription";
 
@@ -13,6 +13,7 @@ import MediaTypeReviews from "../components/MediaTypeReviews";
 
 const MovieDetails = () => {
   const { slug, id } = useParams();
+  const matches = useMediaQuery("(max-width: 767.9px)");
   const { data, isLoading, error } = useQuery({
     queryKey: ["movie", slug, id],
     queryFn: () =>
@@ -22,7 +23,6 @@ const MovieDetails = () => {
     select: (data) => data.data,
     enabled: !!id,
   });
-  console.log(data);
 
   // Scroll to top
   useEffect(() => {
@@ -52,7 +52,7 @@ const MovieDetails = () => {
 
         <Stack
           sx={{
-            flexDirection: { xs: "column", sm: "row" },
+            flexDirection: { xs: "column", md: "row" },
             justifyContent: "space-between",
             alignItems: "start",
             gap: 2.5,
@@ -60,21 +60,20 @@ const MovieDetails = () => {
         >
           <Box
             sx={{
-              flexBasis: { xs: "100%", sm: "calc(65% - 10px)" },
-              maxWidth: { xs: "100%", sm: "calc(65% - 10px)" },
+              flexBasis: { xs: "100%", md: "calc(65% - 10px)" },
+              maxWidth: { xs: "100%", md: "calc(65% - 10px)" },
               display: "flex",
               flexDirection: "column",
               gap: "20px",
             }}
           >
             <MediaTypeDescription data={data} />
-            {/* GET https://api.themoviedb.org/3/person/{person_id}?api_key=YOUR_API_KEY&language=en-US */}
-            {/* MediaTypeCast عايزين نعمل بوبه فيها كل بيانات الممثل لما حد يدوس علي صوره في مكون ال  */}
+            {matches && <MediaTypeDetails data={data} />}
             <MediaTypeCast data={data} />
             <MediaTypeReviews data={data} />
           </Box>
 
-          <MediaTypeDetails data={data} />
+          {!matches && <MediaTypeDetails data={data} />}
         </Stack>
       </Container>
     </>

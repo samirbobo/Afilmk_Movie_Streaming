@@ -39,7 +39,7 @@ const ContentReviewDialog = ({ open, scroll, handleClose, review }) => {
         aria-describedby="scroll-dialog-description"
         BackdropProps={{
           sx: {
-            backgroundColor: "rgba(0, 0, 0, 0.1)", // لون الخلفية لما يتفتح
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // لون الخلفية لما يتفتح
           },
         }}
         PaperProps={{
@@ -149,7 +149,14 @@ const ContentReviewDialog = ({ open, scroll, handleClose, review }) => {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            variant="contained"
+            color="info"
+            onClick={handleClose}
+            sx={{ p: "4px 10px" }}
+          >
+            Cancel
+          </Button>
         </DialogActions>
       </Dialog>
     </ThemeProvider>
