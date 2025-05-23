@@ -7,6 +7,10 @@ import MediaTabs from "./MediaTabs";
 const HeaderSection = ({ link, title, selectedTab, handleTabChange }) => {
   const navigate = useNavigate();
   const theme = useTheme();
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate(link);
+  };
   return (
     <Stack
       direction="row"
@@ -15,13 +19,16 @@ const HeaderSection = ({ link, title, selectedTab, handleTabChange }) => {
       pb={1.5}
     >
       <Stack
-        onClick={() => navigate(link)}
+        component={"a"}
+        href={link}
+        onClick={(event) => handleClick(event)}
         sx={{
           flexDirection: "row",
           alignItems: "center",
-          gap: {xs: 0, sm: 0.5},
+          gap: { xs: 0, sm: 0.5 },
           cursor: "pointer",
           transition: "0.2s linear",
+          color: theme.palette.text.primary,
           "&:hover": {
             color: theme.palette.primary.main,
           },
@@ -30,8 +37,8 @@ const HeaderSection = ({ link, title, selectedTab, handleTabChange }) => {
         <Typography
           variant="h2"
           sx={{
-            fontSize: {xs: "18px", sm: "24px"},
-            fontWeight: {xs: 700, sm: 900},
+            fontSize: { xs: "18px", sm: "24px" },
+            fontWeight: { xs: 700, sm: 900 },
             letterSpacing: 0,
             lineHeight: "32px",
           }}

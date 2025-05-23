@@ -61,7 +61,6 @@ const Popular = () => {
   };
 
   const onApplyFilters = (filterData) => {
-    console.log(filterData);
     setFilters(filterData); // Update parent state with filter data
     setPage(1);
   };
@@ -90,7 +89,6 @@ const Popular = () => {
 
       return responses
         .flatMap((res) => res.data.results)
-        .filter((item) => item.poster_path)
         .slice(0, ITEMS_PER_UI_PAGE);
     },
     keepPreviousData: true,
@@ -135,6 +133,7 @@ const Popular = () => {
           <MediaList
             data={data}
             genresType={filters.mediaType === "Movies" ? 0 : 1}
+            from={"Popular"}
           />
         )}
 

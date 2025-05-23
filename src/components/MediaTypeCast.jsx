@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Box, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -14,21 +14,40 @@ import axios from "axios";
 import { API_KEY, BASE_URL } from "../baseUrl";
 import { useState } from "react";
 import CastSection from "./CastSection";
+import person from "../images/person.png";
 
 const MediaTypeCast = ({ data }) => {
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const theme = useTheme();
   const cast = data?.credits?.cast || [];
+  const isLg = useMediaQuery("(min-width:1024px)");
+  const isMd = useMediaQuery("(min-width:768px) and (max-width:1023px)");
+  const isSm = useMediaQuery("(min-width:480px) and (max-width:767px)");
+  const isXsSm = useMediaQuery("(min-width:0px) and (max-width:479px)");
+  let shouldShowArrows = false;
+
+  if (isLg && cast.length > 8) {
+    shouldShowArrows = true;
+  } else if (isMd && cast.length > 6) {
+    shouldShowArrows = true;
+  } else if (isSm && cast.length > 4) {
+    shouldShowArrows = true;
+  } else if (isXsSm && cast.length > 3) {
+    shouldShowArrows = true;
+  }
 
   const handleOpenModal = async (id) => {
+    setShowModal(true);
+    setLoading(true);
     const response = await axios.get(
       `${BASE_URL}/person/${id}?api_key=${API_KEY}&language=en-US`
     );
 
     const data = await response.data;
     setSelectedPerson(data);
-    setShowModal(true);
+    setLoading(false);
   };
 
   const handleClose = () => {
@@ -70,7 +89,9 @@ const MediaTypeCast = ({ data }) => {
         </Typography>
 
         {/* arrow Icons */}
-        <SliderArrowIcons prev={"custom-prev"} next={"custom-next"} />
+        {shouldShowArrows && (
+          <SliderArrowIcons prev={"custom-prev"} next={"custom-next"} />
+        )}
       </Stack>
 
       {/* Swiper Data */}
@@ -92,25 +113,31 @@ const MediaTypeCast = ({ data }) => {
           }}
         >
           {cast.map((actor) => {
-            if (actor.profile_path) {
-              return (
-                <SwiperSlide
-                  key={actor.id}
-                  style={{
-                    borderRadius: "10px",
-                    aspectRatio: "1",
-                    overflow: "hidden",
-                    cursor: "pointer",
+            return (
+              <SwiperSlide
+                key={actor.id}
+                style={{
+                  borderRadius: "10px",
+                  aspectRatio: "1",
+                  overflow: "hidden",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleOpenModal(actor.id)}
+              >
+                <img
+                  src={
+                    actor?.profile_path
+                      ? `https://image.tmdb.org/t/p/original${actor.profile_path}`
+                      : person
+                  }
+                  alt={actor.name}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = person; // صورة بديلة عند فشل التحميل
                   }}
-                  onClick={() => handleOpenModal(actor.id)}
-                >
-                  <img
-                    src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
-                    alt={actor.name}
-                  />
-                </SwiperSlide>
-              );
-            }
+                />
+              </SwiperSlide>
+            );
           })}
         </Swiper>
       </Box>
@@ -119,6 +146,7 @@ const MediaTypeCast = ({ data }) => {
         showModal={showModal}
         selectedPerson={selectedPerson}
         handleClose={handleClose}
+        loading={loading}
       />
     </Box>
   );

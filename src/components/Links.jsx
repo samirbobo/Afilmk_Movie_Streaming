@@ -40,7 +40,7 @@ const Links = ({ title, scrollTrigger, data }) => {
     >
       <Typography
         variant="body1"
-        sx={{ color: !scrollTrigger ? "#fff" : theme.palette.text.primary }}
+        sx={{ color: scrollTrigger ? "#fff" : theme.palette.text.primary }}
       >
         {title}
       </Typography>
@@ -48,7 +48,7 @@ const Links = ({ title, scrollTrigger, data }) => {
         sx={{
           fontSize: "16px",
           ml: 1,
-          color: !scrollTrigger ? "#fff" : theme.palette.text.primary,
+          color: scrollTrigger ? "#fff" : theme.palette.text.primary,
         }}
       />
 
@@ -77,6 +77,7 @@ const Links = ({ title, scrollTrigger, data }) => {
                       px: 1.5,
                       textAlign: "center",
                     }}
+                    onClick={() => handleNavigation(link)}
                   >
                     <ListItemText
                       sx={{

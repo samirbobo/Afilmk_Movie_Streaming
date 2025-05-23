@@ -4,13 +4,14 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import parse from "html-react-parser";
 import {
-  CardMedia,
   DialogActions,
   DialogTitle,
+  Skeleton,
   Typography,
 } from "@mui/material";
+import RenderPersonImage from "./RenderPersonImage";
 
-const CastSection = ({ showModal, selectedPerson, handleClose }) => {
+const CastSection = ({ showModal, selectedPerson, handleClose, loading }) => {
   return (
     <Dialog
       open={showModal}
@@ -28,39 +29,35 @@ const CastSection = ({ showModal, selectedPerson, handleClose }) => {
           color: "#fff", // لون الخط داخل الدايلوج
           backgroundImage: "none",
           maxWidth: 550,
+          width: "90vw",
         },
       }}
     >
-      {selectedPerson?.profile_path && (
-        <DialogTitle>
-          <CardMedia
-            sx={{
-              height: 250,
-              width: "100%",
-              maxWidth: 400,
-              margin: "0 auto",
-              objectFit: "cover",
-              borderRadius: "0.25rem",
-            }}
-            image={`https://image.tmdb.org/t/p/w300${selectedPerson?.profile_path}`}
-            title={selectedPerson?.name}
-            alt={selectedPerson?.name}
-          />
-        </DialogTitle>
-      )}
+      <DialogTitle>
+        <RenderPersonImage loading={loading} selectedPerson={selectedPerson} />
+      </DialogTitle>
+
       <DialogContent dividers>
-        {selectedPerson?.name && (
-          <Typography variant="h5" sx={{ color: "#fff" }}>
-            {selectedPerson?.name}
-          </Typography>
+        {loading ? (
+          <Skeleton animation="wave" height={32} />
+        ) : (
+          selectedPerson?.name && (
+            <Typography variant="h5" sx={{ color: "#fff" }}>
+              {selectedPerson?.name}
+            </Typography>
+          )
         )}
-        {selectedPerson?.birthday && (
-          <Typography
-            variant="body2"
-            sx={{ color: "rgba(255, 255, 255, 0.7)", mt: 1 }}
-          >
-            <strong>Birthday:</strong> {selectedPerson?.birthday}
-          </Typography>
+        {loading ? (
+          <Skeleton animation="wave" height={20} mt={1} width="60%" />
+        ) : (
+          selectedPerson?.birthday && (
+            <Typography
+              variant="body2"
+              sx={{ color: "rgba(255, 255, 255, 0.7)", mt: 1 }}
+            >
+              <strong>Birthday:</strong> {selectedPerson?.birthday}
+            </Typography>
+          )
         )}
         {selectedPerson?.deathday && (
           <Typography

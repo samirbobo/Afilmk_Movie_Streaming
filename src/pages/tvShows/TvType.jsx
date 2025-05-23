@@ -87,7 +87,6 @@ const TvType = () => {
       );
       return responses
         .flatMap((res) => res.data.results)
-        .filter((show) => show.poster_path)
         .slice(0, ITEMS_PER_UI_PAGE); // Limit to 60 items per page
     },
     keepPreviousData: true,
@@ -126,7 +125,12 @@ const TvType = () => {
             Error
           </Typography>
         ) : (
-          <MediaList data={shows} genresType={1} section={"MovieType"} />
+          <MediaList
+            data={shows}
+            genresType={1}
+            section={"MovieType"}
+            from={["tv-shows", tvType]}
+          />
         )}
 
         {totalCustomPages > 1 && (

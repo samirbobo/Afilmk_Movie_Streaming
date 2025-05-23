@@ -67,7 +67,6 @@ const MovieType = () => {
   };
 
   const onApplyFilters = (filterData) => {
-    console.log(filterData);
     setFilters(filterData); // Update parent state with filter data
     setPage(1);
   };
@@ -95,7 +94,6 @@ const MovieType = () => {
       );
       return responses
         .flatMap((res) => res.data.results)
-        .filter((movie) => movie.poster_path)
         .slice(0, ITEMS_PER_UI_PAGE); // لو مثلاً في آخر صفحة وراجع أكتر من 60
     },
     keepPreviousData: true,
@@ -137,7 +135,12 @@ const MovieType = () => {
             Error
           </Typography>
         ) : (
-          <MediaList data={movies} genresType={0} section={"MovieType"} />
+          <MediaList
+            data={movies}
+            genresType={0}
+            section={"MovieType"}
+            from={["movies", movieType]}
+          />
         )}
 
         {totalCustomPages > 1 && (

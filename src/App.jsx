@@ -24,6 +24,7 @@ const Upcoming = lazy(() => import("./pages/Upcoming"));
 const Popular = lazy(() => import("./pages/Popular"));
 const MovieDetails = lazy(() => import("./pages/MovieDetails"));
 const TvShowDetails = lazy(() => import("./pages/TvShowDetails"));
+const SearchResults = lazy(() => import("./pages/SearchResults"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 // Material UI
@@ -57,6 +58,8 @@ const router = createBrowserRouter(
 
       <Route path="movie/:slug/:id" element={<MovieDetails />} />
       <Route path="tv/:slug/:id" element={<TvShowDetails />} />
+
+      <Route path="/search" element={<SearchResults />} />
 
       <Route path="*" element={<NotFoundPage />} />
     </Route>

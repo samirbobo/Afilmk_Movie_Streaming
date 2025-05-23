@@ -10,9 +10,36 @@ import {
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import ThumbUpOffAltOutlinedIcon from "@mui/icons-material/ThumbUpOffAltOutlined";
 import ThumbUpOffAltRoundedIcon from "@mui/icons-material/ThumbUpOffAltRounded";
+import { useState } from "react";
+import TrailerDialog from "./TrailerDialog";
+import comingSoon from "../images/coming-soon-3.jpg";
 
 const MediaTypeDetailsImage = ({ data }) => {
+  const [open, setOpen] = useState(false);
   const theme = useTheme();
+  const LOCAL_STORAGE_KEY = `liked-movie-${data.id}`;
+  const [checked, setChecked] = useState(
+    localStorage.getItem(LOCAL_STORAGE_KEY)
+      ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
+      : false
+  );
+
+  const trailer = data.videos?.results?.find(
+    (video) => video.type === "Trailer" && video.site === "YouTube"
+  );
+
+  const teaser = data.videos?.results?.find(
+    (video) => video.type === "Teaser" && video.site === "YouTube"
+  );
+
+  const videoToShow = trailer || teaser;
+
+  const handleChange = (event) => {
+    const newValue = event.target.checked;
+    setChecked(newValue);
+
+    localStorage.setItem(LOCAL_STORAGE_KEY, newValue);
+  };
 
   return (
     <Box
@@ -27,13 +54,23 @@ const MediaTypeDetailsImage = ({ data }) => {
     >
       <img
         loading="lazy"
-        src={`https://image.tmdb.org/t/p/original${data.backdrop_path}`}
+        src={
+          data.backdrop_path
+            ? `https://image.tmdb.org/t/p/original${data.backdrop_path}`
+            : data.poster_path
+            ? `https://image.tmdb.org/t/p/original${data.poster_path}`
+            : comingSoon // صورة بديلة محلياً
+        }
         alt={`Backdrop for ${data.title || "Movie"}`}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = comingSoon; // صورة بديلة عند فشل التحميل
+        }}
         style={{
           borderRadius: "12px",
           width: "100%",
           height: "100%",
-          minHeight: 400,
+          aspectRatio: 4 / 2,
           objectFit: "cover",
           display: "block",
         }}
@@ -69,30 +106,33 @@ const MediaTypeDetailsImage = ({ data }) => {
         <Typography
           variant="h3"
           sx={{
-            fontSize: { xs: "24px", sm: "30px" },
+            fontSize: { xs: "20px", md: "30px" },
             fontWeight: "bold",
             textAlign: "center",
             color: "#fff",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
             overflow: "hidden",
+            mb: { md: 0.25 },
           }}
         >
-          {data.title}
+          {data?.title || data?.name}
         </Typography>
 
-        <Typography
-          variant="body1"
-          sx={{
-            fontSize: "16px",
-            color: theme.palette.text.secondary,
-            display: { xs: "none", sm: "block" },
-            maxWidth: "750px",
-            margin: "0 auto",
-          }}
-        >
-          {data.tagline}
-        </Typography>
+        {data?.tagline && (
+          <Typography
+            variant="body1"
+            sx={{
+              fontSize: "16px",
+              color: theme.palette.text.secondary,
+              display: { xs: "none", md: "block" },
+              maxWidth: "750px",
+              margin: "0 auto",
+            }}
+          >
+            {data.tagline}
+          </Typography>
+        )}
 
         <Stack
           sx={{
@@ -100,24 +140,29 @@ const MediaTypeDetailsImage = ({ data }) => {
             justifyContent: "center",
             gap: 2.5,
             alignItems: "center",
-            mt: { xs: 1, sm: 1.5 },
+            mt: { xs: 1, md: 1.5 },
           }}
         >
-          <Button
-            variant="contained"
-            startIcon={<PlayArrowRoundedIcon />}
-            sx={{
-              textTransform: "capitalize",
-              "& .MuiButton-startIcon": {
-                mr: 0.5,
-              },
-            }}
-          >
-            Play Now
-          </Button>
+          {videoToShow?.key && (
+            <Button
+              variant="contained"
+              onClick={() => setOpen(true)}
+              startIcon={<PlayArrowRoundedIcon />}
+              sx={{
+                textTransform: "capitalize",
+                "& .MuiButton-startIcon": {
+                  mr: 0.5,
+                },
+              }}
+            >
+              Watch Trailer
+            </Button>
+          )}
 
           <Box sx={{ background: "#0F0F0F", borderRadius: "8px" }}>
             <Checkbox
+              checked={checked}
+              onChange={handleChange}
               icon={
                 <ThumbUpOffAltOutlinedIcon
                   fontSize="small"
@@ -137,6 +182,12 @@ const MediaTypeDetailsImage = ({ data }) => {
           </Box>
         </Stack>
       </Box>
+
+      <TrailerDialog
+        trailerKey={trailer?.key}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
     </Box>
   );
 };

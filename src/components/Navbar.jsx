@@ -15,8 +15,9 @@ import { cloneElement, useState } from "react";
 import ToggleMode from "./ToggleMode";
 import { UseGlobalGenres } from "../context/GenresContext";
 import Links from "./Links";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import DialogSearch from "./DialogSearch";
 
 // hide navbar animation when the user scroll down and show it again when the user scroll up
 function HideOnScroll(props) {
@@ -56,9 +57,10 @@ const Navbar = (props) => {
     tvShowsError,
   } = UseGlobalGenres();
 
-  const navigate = useNavigate();
   const [state, setState] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   const toggleDrawer = (open) => {
     setState(open);
@@ -68,10 +70,12 @@ const Navbar = (props) => {
     setSearchOpen((prevState) => !prevState);
   };
 
-  const elevationTrigger = useScrollTrigger({
+  const isScroll = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
   });
+
+  const elevationTrigger = !isScroll && isHomePage;
 
   if (isMoviesLoading || isTvShowsLoading) {
     return "Loading..";
@@ -80,16 +84,14 @@ const Navbar = (props) => {
   return (
     <>
       <HideOnScroll {...props}>
-        <AppBar component="nav" elevation={0}>
+        <AppBar component="nav" elevation={elevationTrigger ? 0 : 4}>
           <Toolbar>
             {/* Logo */}
             <Link to={"/"} style={{ flexGrow: 1 }}>
               <Typography
                 variant="h6"
                 sx={{
-                  color: !elevationTrigger
-                    ? "#fff"
-                    : theme.palette.text.primary,
+                  color: elevationTrigger ? "#fff" : theme.palette.text.primary,
                 }}
               >
                 Aflamk
@@ -127,7 +129,7 @@ const Navbar = (props) => {
                 <Typography
                   variant="body1"
                   sx={{
-                    color: !elevationTrigger
+                    color: elevationTrigger
                       ? "#fff"
                       : theme.palette.text.primary,
                   }}
@@ -143,7 +145,7 @@ const Navbar = (props) => {
               onClick={handleSearchToggle}
               sx={{
                 ml: 1,
-                color: !elevationTrigger ? "#fff" : theme.palette.text.primary,
+                color: elevationTrigger ? "#fff" : theme.palette.text.primary,
               }}
             >
               <Search />
@@ -156,7 +158,7 @@ const Navbar = (props) => {
               onClick={() => toggleDrawer(true)}
               sx={{
                 display: { sm: "none" },
-                color: !elevationTrigger ? "#fff" : theme.palette.text.primary,
+                color: elevationTrigger ? "#fff" : theme.palette.text.primary,
               }}
             >
               <Menu />
@@ -166,6 +168,8 @@ const Navbar = (props) => {
       </HideOnScroll>
 
       <Sidebar state={state} toggleDrawer={toggleDrawer} />
+
+      <DialogSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 };

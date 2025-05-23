@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Container,
   Pagination,
   Toolbar,
@@ -6,28 +7,41 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import HeaderMediaType from "../components/HeaderMediaType";
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { API_KEY, BASE_URL } from "../baseUrl";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
+import { API_KEY } from "../baseUrl";
+import { useEffect, useState } from "react";
 import MediaList from "../components/MediaList";
+
+const useSearchQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
 
 const MAX_PAGES = 40;
 const ITEMS_PER_UI_PAGE = 60; // number of movies in one page
 
-const Trending = () => {
+const SearchResults = () => {
   const theme = useTheme();
+  const query = useSearchQuery();
+  const searchTerm = query.get("query");
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [page, setPage] = useState(1);
 
+  // بنجيب فقط أول صفحة عشان نعرف عدد النتائج الإجمالي
   const { data: firstPageMeta } = useQuery({
-    queryKey: ["trending-media-firstPageMeta"],
+    queryKey: ["view-all-search", searchTerm],
     queryFn: () =>
-      axios.get(`${BASE_URL}/trending/all/week?api_key=${API_KEY}`),
+      axios.get("https://api.themoviedb.org/3/search/multi", {
+        params: {
+          api_key: API_KEY,
+          query: searchTerm,
+        },
+      }),
     select: (res) => ({
       totalResults: res.data.total_results,
     }),
+    enabled: !!searchTerm,
   });
 
   // بنحسب عدد صفحاتنا المخصصة (max 40)
@@ -42,21 +56,28 @@ const Trending = () => {
   };
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["all-trending-media-data", page],
+    queryKey: ["view-all-search", page, searchTerm],
     queryFn: async () => {
       const pages = getApiPages(page);
       const responses = await Promise.all(
-        pages.map((page) =>
-          axios.get(
-            `${BASE_URL}/trending/all/week?api_key=${API_KEY}&page=${page}`
-          )
+        pages.map((p) =>
+          axios.get("https://api.themoviedb.org/3/search/multi", {
+            params: {
+              api_key: API_KEY,
+              query: searchTerm,
+              page: p,
+            },
+          })
         )
       );
+
       return responses
         .flatMap((res) => res.data.results)
-        .slice(0, ITEMS_PER_UI_PAGE); // Limit to 60 items per page
+        .filter((item) => item.media_type !== "person")
+        .slice(0, ITEMS_PER_UI_PAGE);
     },
     keepPreviousData: true,
+    enabled: !!searchTerm,
   });
 
   // Scroll to top
@@ -68,28 +89,40 @@ const Trending = () => {
     <>
       <Toolbar />
       <Container
-        className="Movies"
         sx={{
           px: { xs: "1rem", sm: "3rem", md: "4rem" },
           py: 2,
           maxWidth: "1920px !important",
         }}
       >
-        <HeaderMediaType
-          title={`Trending Now`}
-          subTitle={`Explore top trending content, curated just for you`}
-        />
+        <Typography
+          variant="h2"
+          color="text.primary"
+          sx={{
+            fontSize: { xs: "1.5rem", md: "2.5rem" },
+            pb: "2rem",
+            mb: "2.5rem",
+            textAlign: "center",
+            borderBottomWidth: "1px",
+            borderBottomStyle: "solid",
+            borderBottomColor: "text.secondary",
+          }}
+        >
+          {searchTerm
+            ? `Search Results for ${searchTerm}🎬`
+            : "Please enter a search term to see results 🔍"}
+        </Typography>
 
         {isLoading ? (
           <Typography sx={{ textAlign: "center", py: 4, height: "40vh" }}>
-            Loading...
+            <CircularProgress />
           </Typography>
         ) : isError ? (
           <Typography sx={{ textAlign: "center", py: 4, height: "40vh" }}>
             Error
           </Typography>
         ) : (
-          <MediaList data={data} from="Trending" />
+          data && <MediaList data={data} />
         )}
 
         {totalCustomPages > 1 && (
@@ -110,4 +143,4 @@ const Trending = () => {
   );
 };
 
-export default Trending;
+export default SearchResults;

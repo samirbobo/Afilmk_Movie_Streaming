@@ -13,7 +13,7 @@ import StarIcon from "@mui/icons-material/Star";
 import { UseGlobalGenres } from "../context/GenresContext";
 import { Link } from "react-router-dom";
 
-const MediaCarousel = ({ data, type }) => {
+const MediaCarousel = ({ data, type, from }) => {
   const { movieGenres, tvShowGenres, getGenreNames } = UseGlobalGenres();
   const theme = useTheme();
 
@@ -54,7 +54,10 @@ const MediaCarousel = ({ data, type }) => {
                 ":hover .genres": { opacity: 1, transform: "translateY(0px)" },
               }}
             >
-              <Link to={`${isMediaType}/${item.name || item.title}/${item.id}`}>
+              <Link
+                to={`/${isMediaType}/${item.name || item.title}/${item.id}`}
+                state={{ from }}
+              >
                 <CardMedia
                   component="img"
                   loading="lazy"

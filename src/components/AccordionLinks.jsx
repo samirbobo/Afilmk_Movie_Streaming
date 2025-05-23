@@ -22,7 +22,6 @@ const AccordionLinks = ({ title, links, toggleDrawer }) => {
         ? `/${basePath}`
         : `/${basePath}/${linkName.toLowerCase()}`;
     navigate(path);
-    console.log("Calling toggleDrawer(false)");
     toggleDrawer(false);
   };
 

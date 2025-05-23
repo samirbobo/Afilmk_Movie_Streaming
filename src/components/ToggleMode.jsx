@@ -8,7 +8,7 @@ import { DarkModeOutlined, LightModeOutlined } from "@mui/icons-material";
 const ToggleMode = ({ scrollTrigger }) => {
   const colorMode = useContext(ColorModeContext);
   const theme = useTheme();
-  const iconColor = !scrollTrigger ? "#fff" : "inherit";
+  const iconColor = scrollTrigger ? "#fff" : "inherit";
 
   return (
     <>

@@ -7,7 +7,6 @@ const ErrorBoundary = () => {
   const theme = useTheme();
   let errorMessage = "Something went wrong";
   let error = useRouteError();
-  console.error(error);
 
   if (isRouteErrorResponse(error)) {
     if (error.status === 404) {

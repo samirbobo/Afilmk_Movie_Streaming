@@ -110,7 +110,9 @@ const Movies = () => {
                   <ShowMoreBtn link={genre.name.toLowerCase()} />
                 </Stack>
 
-                {movies && <MediaCarousel data={movies} type="movie" />}
+                {movies && (
+                  <MediaCarousel data={movies} type="movie" from="Movies" />
+                )}
               </Box>
             );
           }

@@ -19,7 +19,6 @@ const ContentReviewDialog = ({ open, scroll, handleClose, review }) => {
 
   const descriptionElementRef = useRef(null);
   const defaultTheme = createTheme(); // ← theme الافتراضي بتاع MUI
-  console.log(review);
 
   useEffect(() => {
     if (open) {

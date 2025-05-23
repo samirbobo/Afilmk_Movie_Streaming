@@ -5,6 +5,7 @@ import {
   Rating,
   Stack,
   Typography,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import parse from "html-react-parser";
@@ -30,6 +31,12 @@ const MediaTypeReviews = ({ data }) => {
   const [scroll, setScroll] = useState("paper");
   const [selectedReview, setSelectedReview] = useState(null);
   const reviews = data?.reviews?.results || [];
+  const isLg = useMediaQuery("(min-width:1024px)");
+  let shouldShowArrows = false;
+
+  if (isLg && reviews.length > 2) {
+    shouldShowArrows = true;
+  }
 
   const handleClickOpen = (scrollType, reviewContent) => () => {
     setSelectedReview(reviewContent);
@@ -74,10 +81,12 @@ const MediaTypeReviews = ({ data }) => {
         </Typography>
 
         {/* arrow Icons */}
-        <SliderArrowIcons
-          prev={"custom-prev-review"}
-          next={"custom-next-review"}
-        />
+        {shouldShowArrows && (
+          <SliderArrowIcons
+            prev={"custom-prev-review"}
+            next={"custom-next-review"}
+          />
+        )}
       </Stack>
 
       {/* Swiper Data */}
