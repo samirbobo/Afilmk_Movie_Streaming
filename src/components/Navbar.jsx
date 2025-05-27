@@ -18,10 +18,11 @@ import Links from "./Links";
 import { Link, useLocation } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import DialogSearch from "./DialogSearch";
+import logo from "../images/logo-transparent.png";
 
 // hide navbar animation when the user scroll down and show it again when the user scroll up
 function HideOnScroll(props) {
-  const { children, window } = props;
+  const { children, window, isHomePage } = props;
 
   // لاخفاء الناف بار لما المستخدام يعمل اسكرول لاسفل واظهاره عند التمرير لاعلي
   const hideTrigger = useScrollTrigger({
@@ -39,7 +40,12 @@ function HideOnScroll(props) {
     <Slide appear={true} direction="down" in={!hideTrigger}>
       {cloneElement(children, {
         sx: {
-          background: !elevationTrigger && "transparent", // Gradient when at the top
+          backgroundColor: isHomePage
+            ? elevationTrigger
+              ? "#523c7f" // بعد التمرير في الصفحة الرئيسية
+              : "transparent" // أول الصفحة الرئيسية - شفاف
+            : "#523c7f", // باقي الصفحات
+          transition: "background-color 0.3s ease",
         },
       })}
     </Slide>
@@ -77,25 +83,18 @@ const Navbar = (props) => {
 
   const elevationTrigger = !isScroll && isHomePage;
 
-  if (isMoviesLoading || isTvShowsLoading) {
-    return "Loading..";
-  }
-
   return (
     <>
-      <HideOnScroll {...props}>
+      <HideOnScroll {...props} isHomePage={isHomePage}>
         <AppBar component="nav" elevation={elevationTrigger ? 0 : 4}>
-          <Toolbar>
+          <Toolbar sx={{ pl: { xs: 0 } }}>
             {/* Logo */}
             <Link to={"/"} style={{ flexGrow: 1 }}>
-              <Typography
-                variant="h6"
-                sx={{
-                  color: elevationTrigger ? "#fff" : theme.palette.text.primary,
-                }}
-              >
-                Aflamk
-              </Typography>
+              <img
+                src={logo}
+                alt="logo"
+                style={{ height: "58px", width: "158px", objectFit: "cover" }}
+              />
             </Link>
 
             {/* Links */}
@@ -109,31 +108,24 @@ const Navbar = (props) => {
             >
               <Links
                 title="Movies"
-                scrollTrigger={elevationTrigger}
                 data={
-                  moviesError
+                  moviesError || isMoviesLoading
                     ? [{ id: "all", name: "All" }]
                     : [{ id: "all", name: "All" }, ...movieGenres]
                 }
+                style={moviesError || isMoviesLoading ? true : false}
               />
               <Links
                 title="Tv Shows"
-                scrollTrigger={elevationTrigger}
                 data={
-                  tvShowsError
+                  tvShowsError || isTvShowsLoading
                     ? [{ id: "all", name: "All" }]
                     : [{ id: "all", name: "All" }, ...tvShowGenres]
                 }
+                style={tvShowsError || isTvShowsLoading ? true : false}
               />
               <Link to={"/latest-additions"}>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: elevationTrigger
-                      ? "#fff"
-                      : theme.palette.text.primary,
-                  }}
-                >
+                <Typography variant="body1" color="custom.white">
                   Latest Additions
                 </Typography>
               </Link>
@@ -145,20 +137,20 @@ const Navbar = (props) => {
               onClick={handleSearchToggle}
               sx={{
                 ml: 1,
-                color: elevationTrigger ? "#fff" : theme.palette.text.primary,
+                color: theme.palette.custom.white,
               }}
             >
               <Search />
             </IconButton>
 
-            <ToggleMode scrollTrigger={elevationTrigger} />
+            <ToggleMode />
 
             <IconButton
               aria-label="open drawer"
               onClick={() => toggleDrawer(true)}
               sx={{
                 display: { sm: "none" },
-                color: elevationTrigger ? "#fff" : theme.palette.text.primary,
+                color: theme.palette.custom.white,
               }}
             >
               <Menu />

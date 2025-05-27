@@ -7,14 +7,14 @@ const MediaTabs = ({ tabIndex, handleChange }) => {
   const style = {
     color: theme.palette.text.secondary,
     transition: "all 0.3s ease-in-out",
-    padding: { xs: "8px 6px", sm: "14px 16px" },
+    padding: { xs: "8px 6px", sm: "10px 12px" },
     textTransform: "capitalize",
-    minWidth: { xs: "auto", md: 90 },
+    minWidth: "auto",
     minHeight: "auto",
     borderRadius: "50px",
     "&.Mui-selected": {
-      color: theme.palette.text.primary,
-      background: theme.palette.background.paper,
+      color: theme.palette.custom.white,
+      backgroundColor: theme.palette.custom.favBackDark,
       transition: "all 0.3s ease-in-out",
     },
   };

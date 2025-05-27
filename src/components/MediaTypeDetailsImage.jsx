@@ -44,7 +44,7 @@ const MediaTypeDetailsImage = ({ data }) => {
   return (
     <Box
       sx={{
-        width: { xs: "90vw", sm: "70vw" },
+        width: { xs: "85vw", sm: "70vw" },
         margin: "0 auto",
         position: "relative",
         borderRadius: "12px",
@@ -124,7 +124,7 @@ const MediaTypeDetailsImage = ({ data }) => {
             variant="body1"
             sx={{
               fontSize: "16px",
-              color: theme.palette.text.secondary,
+              color: "#B3B3B3",
               display: { xs: "none", md: "block" },
               maxWidth: "750px",
               margin: "0 auto",
@@ -149,7 +149,13 @@ const MediaTypeDetailsImage = ({ data }) => {
               onClick={() => setOpen(true)}
               startIcon={<PlayArrowRoundedIcon />}
               sx={{
+                background: theme.palette.custom.favBackLight,
+                color: "custom.white",
                 textTransform: "capitalize",
+                transition: "0.2s linear",
+                "&:hover": {
+                  background: theme.palette.custom.favBackDark,
+                },
                 "& .MuiButton-startIcon": {
                   mr: 0.5,
                 },
@@ -171,7 +177,7 @@ const MediaTypeDetailsImage = ({ data }) => {
               }
               checkedIcon={
                 <ThumbUpOffAltRoundedIcon
-                  sx={{ color: theme.palette.primary }}
+                  sx={{ color: theme.palette.custom.favBackLight }}
                   fontSize="small"
                 />
               }

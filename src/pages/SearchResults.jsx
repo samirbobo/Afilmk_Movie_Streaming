@@ -1,5 +1,4 @@
 import {
-  CircularProgress,
   Container,
   Pagination,
   Toolbar,
@@ -13,6 +12,8 @@ import { useLocation } from "react-router-dom";
 import { API_KEY } from "../baseUrl";
 import { useEffect, useState } from "react";
 import MediaList from "../components/MediaList";
+import Loading from "../components/Loading";
+import ErrorMessage from "../components/ErrorMessage";
 
 const useSearchQuery = () => {
   return new URLSearchParams(useLocation().search);
@@ -90,7 +91,7 @@ const SearchResults = () => {
       <Toolbar />
       <Container
         sx={{
-          px: { xs: "1rem", sm: "3rem", md: "4rem" },
+          px: { xs: "1.25rem", md: "2.5rem", lg: "4rem" },
           py: 2,
           maxWidth: "1920px !important",
         }}
@@ -114,18 +115,14 @@ const SearchResults = () => {
         </Typography>
 
         {isLoading ? (
-          <Typography sx={{ textAlign: "center", py: 4, height: "40vh" }}>
-            <CircularProgress />
-          </Typography>
+          <Loading />
         ) : isError ? (
-          <Typography sx={{ textAlign: "center", py: 4, height: "40vh" }}>
-            Error
-          </Typography>
+          <ErrorMessage />
         ) : (
           data && <MediaList data={data} />
         )}
 
-        {totalCustomPages > 1 && (
+        {data && !isError && totalCustomPages > 1 && (
           <Pagination
             count={totalCustomPages}
             size={isSmallScreen ? "small" : "medium"}
@@ -134,8 +131,18 @@ const SearchResults = () => {
               setPage(value);
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            color="primary"
-            sx={{ mt: 4, display: "flex", justifyContent: "center" }}
+            sx={{
+              mt: 4,
+              display: "flex",
+              justifyContent: "center",
+              "& .MuiPaginationItem-root.Mui-selected": {
+                backgroundColor: theme.palette.custom.favBackLight,
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: theme.palette.custom.favBackLight,
+                },
+              },
+            }}
           />
         )}
       </Container>

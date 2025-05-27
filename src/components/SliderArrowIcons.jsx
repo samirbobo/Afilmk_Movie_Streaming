@@ -5,6 +5,20 @@ import WestIcon from "@mui/icons-material/West";
 
 const SliderArrowIcons = ({ prev, next }) => {
   const theme = useTheme();
+  const style = {
+    cursor: "pointer",
+    p: "12px",
+    borderRadius: "100%",
+    background: theme.palette.background.default,
+    border:
+      theme.palette.mode === "dark" ? "1px solid #404040" : "1px solid #e5e5e5",
+    width: "44px",
+    height: "44px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    userSelect: "none",
+  };
 
   return (
     <Stack
@@ -15,48 +29,12 @@ const SliderArrowIcons = ({ prev, next }) => {
         gap: 1,
       }}
     >
-      <Box
-        className={prev}
-        sx={{
-          cursor: "pointer",
-          p: "12px",
-          borderRadius: "100%",
-          background: "#141414",
-          border: "1px solid #262626",
-          width: "44px",
-          height: "44px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          userSelect: "none",
-        }}
-      >
-        <WestIcon
-          sx={{ color: theme.palette.text.secondary }}
-          fontSize="small"
-        />
+      <Box className={prev} sx={style}>
+        <WestIcon sx={{ color: theme.palette.text.primary }} fontSize="small" />
       </Box>
 
-      <Box
-        className={next}
-        sx={{
-          cursor: "pointer",
-          p: "12px",
-          borderRadius: "100%",
-          background: "#141414",
-          border: "1px solid #262626",
-          width: "44px",
-          height: "44px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          userSelect: "none",
-        }}
-      >
-        <EastIcon
-          sx={{ color: theme.palette.text.secondary }}
-          fontSize="small"
-        />
+      <Box className={next} sx={style}>
+        <EastIcon sx={{ color: theme.palette.text.primary }} fontSize="small" />
       </Box>
     </Stack>
   );

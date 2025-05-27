@@ -2,7 +2,6 @@ import {
   Container,
   Pagination,
   Toolbar,
-  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -16,6 +15,8 @@ import MediaList from "../../components/MediaList";
 import { useEffect, useState } from "react";
 import FilterMenu from "../../components/FilterMenu";
 import { tvSortOptions } from "../../constants";
+import ErrorMessage from "../../components/ErrorMessage";
+import Loading from "../../components/Loading";
 
 const MAX_PAGES = 40;
 const ITEMS_PER_UI_PAGE = 60; // number of movies in one page
@@ -104,7 +105,7 @@ const TvType = () => {
       <Container
         className="Movies"
         sx={{
-          px: { xs: "1rem", sm: "3rem", md: "4rem" },
+          px: { xs: "1.25rem", md: "2.5rem", lg: "4rem" },
           py: 2,
           maxWidth: "1920px !important",
         }}
@@ -114,16 +115,17 @@ const TvType = () => {
           subTitle={`Explore the best of ${tvType} TV shows, carefully picked for your mood`}
         />
 
-        <FilterMenu onApplyFilters={onApplyFilters} sortData={tvSortOptions} />
+        {!isError && (
+          <FilterMenu
+            onApplyFilters={onApplyFilters}
+            sortData={tvSortOptions}
+          />
+        )}
 
         {isLoading ? (
-          <Typography sx={{ textAlign: "center", py: 4, height: "40vh" }}>
-            Loading...
-          </Typography>
+          <Loading />
         ) : isError ? (
-          <Typography sx={{ textAlign: "center", py: 4, height: "40vh" }}>
-            Error
-          </Typography>
+          <ErrorMessage />
         ) : (
           <MediaList
             data={shows}
@@ -133,7 +135,7 @@ const TvType = () => {
           />
         )}
 
-        {totalCustomPages > 1 && (
+        {shows && !isError && totalCustomPages > 1 && (
           <Pagination
             count={totalCustomPages}
             size={isSmallScreen ? "small" : "medium"}
@@ -142,8 +144,18 @@ const TvType = () => {
               setPage(value);
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            color="primary"
-            sx={{ mt: 4, display: "flex", justifyContent: "center" }}
+            sx={{
+              mt: 4,
+              display: "flex",
+              justifyContent: "center",
+              "& .MuiPaginationItem-root.Mui-selected": {
+                backgroundColor: theme.palette.custom.favBackLight,
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: theme.palette.custom.favBackLight,
+                },
+              },
+            }}
           />
         )}
       </Container>

@@ -8,15 +8,15 @@ const HeaderMediaTypeDetails = ({ Icon, title }) => {
       sx={{
         flexDirection: "row",
         alignItems: "center",
-        gap: 0.5,
+        gap: 1,
         mb: 1.25,
       }}
     >
-      <Icon sx={{ color: theme.palette.text.secondary }} fontSize="small" />
+      <Icon sx={{ color: theme.palette.text.primary }} fontSize="small" />
       <Typography
         variant="h4"
         sx={{
-          color: theme.palette.text.secondary,
+          color: theme.palette.text.primary,
           fontSize: "16px",
         }}
       >

@@ -5,6 +5,7 @@ import axios from "axios";
 import MediaList from "../../../components/MediaList";
 import { API_KEY, BASE_URL } from "../../../baseUrl";
 import HeaderSection from "../../../components/HeaderSection";
+import Loading from "../../../components/Loading";
 
 const Upcoming = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -18,6 +19,7 @@ const Upcoming = () => {
     data: upComingMovies,
     isLoading: isMovieLoading,
     isError: isMovieError,
+    isSuccess: isMovieSuccess,
   } = useQuery({
     queryKey: ["Upcoming-movies"],
     queryFn: () => axios.get(`${BASE_URL}/movie/upcoming?api_key=${API_KEY}`),
@@ -29,6 +31,7 @@ const Upcoming = () => {
     data: upComingTvShows,
     isLoading: isTvShowsLoading,
     isError: isTvShowsError,
+    isSuccess: isTvSuccess,
   } = useQuery({
     queryKey: ["Upcoming-tvShows"],
     queryFn: () =>
@@ -39,12 +42,8 @@ const Upcoming = () => {
       data.data.results.filter((item) => item.poster_path).slice(0, 12),
   });
 
-  if (isMovieLoading || isTvShowsLoading) {
-    return "Loading";
-  }
-
   if (isMovieError || isTvShowsError) {
-    return "fetch top rated error";
+    return;
   }
 
   return (
@@ -52,7 +51,7 @@ const Upcoming = () => {
       component={"section"}
       className="top-rated"
       sx={{
-        px: { xs: "1rem", sm: "3rem", md: "4rem" },
+        px: { xs: "1.25rem", md: "2.5rem", lg: "4rem" },
         py: 4,
         maxWidth: "1920px !important",
       }}
@@ -65,11 +64,14 @@ const Upcoming = () => {
         handleTabChange={handleTabChange}
       />
 
-      <MediaList
-        data={selectedTab === 0 ? upComingMovies : upComingTvShows}
-        genresType={selectedTab}
-        section="Upcoming"
-      />
+      {(isMovieLoading || isTvShowsLoading) && <Loading />}
+      {isMovieSuccess && isTvSuccess && (
+        <MediaList
+          data={selectedTab === 0 ? upComingMovies : upComingTvShows}
+          genresType={selectedTab}
+          section="Upcoming"
+        />
+      )}
     </Container>
   );
 };

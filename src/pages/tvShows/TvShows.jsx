@@ -1,4 +1,12 @@
-import { Box, Container, Stack, Toolbar, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Container,
+  Stack,
+  Toolbar,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import ShowMoreBtn from "../../components/showMoreBtn";
 import { UseGlobalGenres } from "../../context/GenresContext";
 import { useQueries } from "@tanstack/react-query";
@@ -8,6 +16,7 @@ import MediaCarousel from "../../components/MediaCarousel";
 import { useState, useEffect, useRef } from "react";
 
 const TvShows = () => {
+  const theme = useTheme();
   const { tvShowGenres } = UseGlobalGenres();
   const [visibleSections, setVisibleSections] = useState(() => {
     const saved = sessionStorage.getItem("tv-visibleSections");
@@ -66,28 +75,13 @@ const TvShows = () => {
       <Container
         className="Movies"
         sx={{
-          px: { xs: "1rem", sm: "3rem", md: "4rem" },
+          px: { xs: "1.25rem", md: "2.5rem", lg: "4rem" },
           py: 2,
           maxWidth: "1920px !important",
         }}
       >
         {visibleGenres.map((genre, index) => {
-          const {
-            data: movies,
-            isSuccess,
-            error,
-          } = tvShowsQueries[index] || {};
-
-          if (error) {
-            return (
-              <Box key={genre.id} py={3}>
-                <Typography color="error">
-                  ❌ Failed to load Tv show for "{genre.name}".
-                </Typography>
-              </Box>
-            );
-          }
-
+          const { data: movies, isSuccess } = tvShowsQueries[index] || {};
           if (isSuccess) {
             return (
               <Box
@@ -127,13 +121,16 @@ const TvShows = () => {
           <Box
             ref={observerRef}
             sx={{
-              height: "60px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              py: 4,
             }}
           >
-            {isAnyLoading && <h1>Loading...</h1>}
+            <CircularProgress
+              sx={{ color: theme.palette.custom.favBackLight }}
+              size="3rem"
+            />
           </Box>
         )}
       </Container>

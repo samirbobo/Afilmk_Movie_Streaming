@@ -43,6 +43,7 @@ const MediaCarousel = ({ data, type, from }) => {
             key={item.id}
             style={{
               borderRadius: "8px",
+              height: "auto",
             }}
           >
             <Card
@@ -51,6 +52,7 @@ const MediaCarousel = ({ data, type, from }) => {
                 borderRadius: 2,
                 position: "relative",
                 cursor: "pointer",
+                height: "100%",
                 ":hover .genres": { opacity: 1, transform: "translateY(0px)" },
               }}
             >
@@ -99,6 +101,7 @@ const MediaCarousel = ({ data, type, from }) => {
                       textOverflow: "ellipsis",
                       textWrapMode: "nowrap",
                       overflow: "hidden",
+                      px: "10px",
                     }}
                   >
                     {item.name || item.title}
@@ -127,8 +130,8 @@ const MediaCarousel = ({ data, type, from }) => {
                       title={name}
                       variant="body2"
                       sx={{
-                        color: theme.palette.text.primary,
-                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.custom.white,
+                        backgroundColor: theme.palette.custom.favBackLight,
                         padding: "5px 8px",
                         borderRadius: "50px",
                         margin: "1px 3px",
@@ -144,6 +147,7 @@ const MediaCarousel = ({ data, type, from }) => {
                   ))}
                 </Box>
 
+                {/* Media Type and rate of movie or tv */}
                 <Box
                   sx={{
                     position: "absolute",
@@ -160,8 +164,8 @@ const MediaCarousel = ({ data, type, from }) => {
                     <Typography
                       variant="body2"
                       sx={{
-                        color: theme.palette.text.primary,
-                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.custom.white,
+                        backgroundColor: theme.palette.custom.favBackLight,
                         padding: "5px 8px",
                         borderRadius: "50px",
                         fontSize: "13px",
@@ -180,8 +184,8 @@ const MediaCarousel = ({ data, type, from }) => {
                         display: "flex",
                         alignItems: "center",
                         gap: 0.25,
-                        color: theme.palette.text.primary,
-                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.custom.white,
+                        backgroundColor: theme.palette.custom.favBackLight,
                         padding: "3px 6px",
                         borderRadius: "50px",
                         fontSize: "12px",

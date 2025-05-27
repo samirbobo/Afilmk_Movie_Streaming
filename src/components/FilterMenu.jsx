@@ -2,8 +2,10 @@
 import {
   Autocomplete,
   Button,
+  Fade,
   FormControl,
   MenuItem,
+  Paper,
   Select,
   Stack,
   TextField,
@@ -18,6 +20,7 @@ import {
   upComingMovieOptions,
   upComingTvOptions,
 } from "../constants";
+import { motion } from "framer-motion";
 
 const FilterMenu = ({ onApplyFilters, section, sortData }) => {
   const theme = useTheme();
@@ -37,6 +40,8 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
       : mediaType === "Movies"
       ? movieSortOptions
       : tvSortOptions);
+
+  const MotionPaper = motion.create(Paper);
 
   useEffect(() => {
     setSort("");
@@ -68,7 +73,7 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
 
   const handleChangeYear = (value) => {
     setYear(value);
-    if (!sort && !rate && !value) {
+    if (!sort && !rate && value == null) {
       const filters = section
         ? { rate: "", sort: "", year: null, mediaType: "Movies" }
         : { rate: "", sort: "", year: null };
@@ -94,7 +99,7 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
   const clearFilters = () => {
     setRate("");
     setSort("");
-    setYear("");
+    setYear(null);
     setMediaType("Movies");
     const filters = section
       ? { rate: "", sort: "", year: null, mediaType: "Movies" }
@@ -104,15 +109,28 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
 
   const style = {
     borderRadius: "50px",
-    backgroundColor: "#ffffff47",
-    "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: "transparent",
+    backgroundColor: theme.palette.background.paper,
+    boxShadow:
+      theme.palette.mode === "light"
+        ? "0 2px 8px rgba(0, 0, 0, 0.12)"
+        : "0 2px 10px rgba(255, 255, 255, 0.05)",
+    ".MuiOutlinedInput-notchedOutline": {
+      border:
+        theme.palette.mode === "dark"
+          ? "1px solid #404040"
+          : "1px solid #e5e5e5",
     },
     "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: "transparent",
+      border:
+        theme.palette.mode === "dark"
+          ? "1px solid #404040"
+          : "1px solid #e5e5e5",
     },
     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "transparent",
+      border:
+        theme.palette.mode === "dark"
+          ? "1px solid #404040"
+          : "1px solid #e5e5e5",
     },
   };
 
@@ -120,6 +138,55 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
     minWidth: 150,
     maxWidth: 250,
     width: "100%",
+  };
+
+  const animation = {
+    disablePortal: true,
+    anchorOrigin: {
+      vertical: "bottom",
+      horizontal: "left",
+    },
+    transformOrigin: {
+      vertical: "top",
+      horizontal: "left",
+    },
+    PaperProps: {
+      component: MotionPaper,
+      initial: { opacity: 0, y: 10, scale: 0.95 },
+      animate: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+          opacity: { duration: 0.15, ease: "easeOut" },
+          y: {
+            type: "spring",
+            stiffness: 300,
+            damping: 15,
+            duration: 0.2,
+          },
+          scale: { duration: 0.15, ease: "easeOut" },
+        },
+      },
+      exit: {
+        opacity: 0,
+        y: 10,
+        scale: 0.95,
+        transition: {
+          duration: 0.1,
+          ease: "easeIn",
+        },
+      },
+      sx: {
+        boxShadow: (theme) =>
+          theme.palette.mode === "light"
+            ? "0 2px 8px rgba(0,0,0,0.15)"
+            : "0 2px 8px rgba(255,255,255,0.1)",
+        mt: 0.5,
+        transformOrigin: "top center",
+      },
+    },
+    TransitionComponent: Fade,
   };
 
   return (
@@ -139,6 +206,7 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
         gap={2}
         flex={1}
       >
+        {/* Rating */}
         {section !== "top-rated" && section !== "Upcoming" && (
           <FormControl size="small" sx={styleWidth} variant="outlined">
             <Select
@@ -156,6 +224,7 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
                 return selectedOption ? selectedOption.label : selected;
               }}
               sx={style}
+              MenuProps={animation}
             >
               {ratingOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -165,6 +234,8 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
             </Select>
           </FormControl>
         )}
+
+        {/* Sort */}
         {section !== "popular" && section !== "LatestAdditions" && (
           <FormControl size="small" sx={styleWidth} variant="outlined">
             <Select
@@ -182,6 +253,7 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
                 return selectedOption ? selectedOption.label : selected;
               }}
               sx={style}
+              MenuProps={animation}
             >
               {sortOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -191,6 +263,8 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
             </Select>
           </FormControl>
         )}
+
+        {/* Media Type  */}
         {section && (
           <FormControl size="small" sx={styleWidth} variant="outlined">
             <Select
@@ -199,12 +273,15 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
               onChange={handleChangeMediaType}
               IconComponent={KeyboardArrowDownIcon}
               sx={style}
+              MenuProps={animation}
             >
               <MenuItem value={"Movies"}>Movies</MenuItem>
               <MenuItem value={"TV Shows"}>TV Shows</MenuItem>
             </Select>
           </FormControl>
         )}
+
+        {/* Year */}
         {section !== "Upcoming" && section !== "LatestAdditions" && (
           <Autocomplete
             sx={styleWidth}
@@ -214,7 +291,10 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
             onChange={(event, newValue) => handleChangeYear(newValue)}
             disablePortal
             popupIcon={<KeyboardArrowDownIcon />} // ← تغيير الأيقونة هنا
-            getOptionLabel={(option) => option.toString()}
+            getOptionLabel={(option) => String(option || "")}
+            componentsProps={{
+              paper: animation.PaperProps,
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -238,6 +318,7 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
         )}
       </Stack>
 
+      {/* filter Actions */}
       <Stack
         flexDirection={"row"}
         alignItems={"center"}
@@ -249,7 +330,14 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
           disabled={!rate && !sort && !year && mediaType === "Movies"}
           variant="contained"
           onClick={applyFilters}
-          color="primary"
+          sx={{
+            background: theme.palette.custom.favBackLight,
+            color: "custom.white",
+            transition: "0.2s linear",
+            "&:hover": {
+              background: theme.palette.custom.favBackDark,
+            },
+          }}
         >
           Apply Filters
         </Button>
@@ -257,7 +345,14 @@ const FilterMenu = ({ onApplyFilters, section, sortData }) => {
           disabled={!rate && !sort && !year && mediaType === "Movies"}
           variant="contained"
           onClick={clearFilters}
-          color="info"
+          sx={{
+            background: theme.palette.custom.navBack,
+            color: "#fff",
+            transition: "0.2s linear",
+            "&:hover": {
+              background: "#673bc0",
+            },
+          }}
         >
           Clear Filters
         </Button>

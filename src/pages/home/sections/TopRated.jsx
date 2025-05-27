@@ -5,6 +5,7 @@ import { useState } from "react";
 import { API_KEY, BASE_URL } from "../../../baseUrl";
 import MediaList from "../../../components/MediaList";
 import HeaderSection from "../../../components/HeaderSection";
+import Loading from "../../../components/Loading";
 
 const fetchTopRated = (type) =>
   axios
@@ -24,6 +25,7 @@ const TopRated = () => {
     data: topMovies = [],
     isLoading: isMovieLoading,
     isError: isMovieError,
+    isSuccess: isMovieSuccess,
   } = useQuery({
     queryKey: ["top-rated-movies"],
     queryFn: () => fetchTopRated("movie"),
@@ -33,24 +35,21 @@ const TopRated = () => {
     data: topTvShows = [],
     isLoading: isTvShowsLoading,
     isError: isTvShowsError,
+    isSuccess: isTvSuccess,
   } = useQuery({
     queryKey: ["top-rated-tv-shows"],
     queryFn: () => fetchTopRated("tv"),
   });
 
-  if (isMovieLoading || isTvShowsLoading) {
-    return "Loading";
-  }
-
   if (isMovieError || isTvShowsError) {
-    return "fetch top rated error";
+    return;
   }
 
   return (
     <Container
       component="section"
       sx={{
-        px: { xs: "1rem", sm: "3rem", md: "4rem" },
+        px: { xs: "1.25rem", md: "2.5rem", lg: "4rem" },
         py: 4,
         maxWidth: "1920px !important",
       }}
@@ -63,10 +62,13 @@ const TopRated = () => {
         handleTabChange={handleTabChange}
       />
 
-      <MediaList
-        data={selectedTab === 0 ? topMovies : topTvShows}
-        genresType={selectedTab}
-      />
+      {(isMovieLoading || isTvShowsLoading) && <Loading />}
+      {isMovieSuccess && isTvSuccess && (
+        <MediaList
+          data={selectedTab === 0 ? topMovies : topTvShows}
+          genresType={selectedTab}
+        />
+      )}
     </Container>
   );
 };

@@ -30,7 +30,7 @@ const HeaderSection = ({ link, title, selectedTab, handleTabChange }) => {
           transition: "0.2s linear",
           color: theme.palette.text.primary,
           "&:hover": {
-            color: theme.palette.primary.main,
+            color: theme.palette.custom.favBackLight,
           },
         }}
       >

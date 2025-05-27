@@ -4,6 +4,7 @@ import axios from "axios";
 import { API_KEY, BASE_URL } from "../../../baseUrl";
 import ShowMoreBtn from "../../../components/showMoreBtn";
 import MediaCarousel from "../../../components/MediaCarousel";
+import Loading from "../../../components/Loading";
 
 const Trending = () => {
   const { data, isLoading, isError } = useQuery({
@@ -16,12 +17,8 @@ const Trending = () => {
       ),
   });
 
-  if (isLoading) {
-    return "Loading...";
-  }
-
   if (isError) {
-    return "Error in fetch...";
+    return;
   }
 
   return (
@@ -29,7 +26,7 @@ const Trending = () => {
       component={"section"}
       className="trending"
       sx={{
-        px: { xs: "1rem", sm: "3rem", md: "4rem" },
+        px: { xs: "1.25rem", md: "2.5rem", lg: "4rem" },
         py: 2,
         maxWidth: "1920px !important",
       }}
@@ -55,7 +52,8 @@ const Trending = () => {
         <ShowMoreBtn link={"trending"} />
       </Stack>
 
-      <MediaCarousel data={data} />
+      {isLoading && <Loading />}
+      {data && <MediaCarousel data={data} />}
     </Container>
   );
 };

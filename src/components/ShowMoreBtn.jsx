@@ -18,9 +18,9 @@ const ShowMoreBtn = ({ link }) => {
           color: theme.palette.text.secondary,
           textTransform: "capitalize",
           ":hover": {
-            background: theme.palette.background.paper, // Change background color on hover
-            color: theme.palette.text.primary,
-            borderColor: theme.palette.background.paper, // Optional: change border color to match
+            background: theme.palette.custom.favBackDark, // Change background color on hover
+            color: theme.palette.custom.white,
+            borderColor: theme.palette.custom.favBackDark, // Optional: change border color to match
           },
         }}
       >

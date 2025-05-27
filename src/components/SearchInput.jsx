@@ -77,15 +77,22 @@ function SearchInput({ onSearch }) {
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
-            <Search sx={{ color: theme.palette.text.secondary }} />
+            <Search
+              sx={{
+                color: theme.palette.mode === "dark" ? "#737373" : "#52525B",
+              }}
+            />
           </InputAdornment>
         ),
         sx: {
           px: "20px",
-          background: "#171717",
+          background: theme.palette.background.default,
           borderRadius: "8px",
-          color: "rgb(212, 212, 212)",
-          border: "0.8px solid rgb(64, 64, 64)",
+          color: theme.palette.text.primary,
+          border:
+            theme.palette.mode === "dark"
+              ? "1px solid #404040"
+              : "1px solid #e5e5e5",
           boxShadow: "rgba(0, 0, 0, 0.03) 0px 0px 5px 0px inset",
           fontSize: "15px",
           lineHeight: "40px",
@@ -100,7 +107,10 @@ function SearchInput({ onSearch }) {
           // تأثير الفوكس
           "&.Mui-focused": {
             outline: "none",
-            boxShadow: "0 0 0 3px #404040", // ظل التركيز
+            boxShadow:
+              theme.palette.mode === "dark"
+                ? "0 0 0 3px #404040"
+                : "0 0 0 3px #e5e5e5", // ظل التركيز
           },
           "& input": {
             padding: 0,

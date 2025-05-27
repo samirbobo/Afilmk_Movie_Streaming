@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const Links = ({ title, scrollTrigger, data }) => {
+const Links = ({ title, data, style }) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -38,17 +38,14 @@ const Links = ({ title, scrollTrigger, data }) => {
         ":hover .box-links": { display: "block" },
       }}
     >
-      <Typography
-        variant="body1"
-        sx={{ color: scrollTrigger ? "#fff" : theme.palette.text.primary }}
-      >
+      <Typography variant="body1" color="custom.white">
         {title}
       </Typography>
       <ExpandMore
         sx={{
           fontSize: "16px",
           ml: 1,
-          color: scrollTrigger ? "#fff" : theme.palette.text.primary,
+          color: theme.palette.custom.white,
         }}
       />
 
@@ -56,26 +53,27 @@ const Links = ({ title, scrollTrigger, data }) => {
       <List
         className="box-links"
         sx={{
-          minWidth: "500px",
+          minWidth: style ? "125px" : "500px",
           position: "absolute",
           top: "100%",
           left: { sm: "75%", md: "50%" },
           transform: "translateX(-50%)",
           display: "none",
           zIndex: 999,
+          pt: 0,
         }}
       >
-        <Paper sx={{ mt: 2, borderRadius: "0.5rem" }}>
+        <Paper sx={{ mt: 2.5, borderRadius: "0.5rem" }}>
           <Grid container>
             {data.map((link) => (
-              <Grid item xs={4} key={link.id}>
+              <Grid item xs={style ? 12 : 4} key={link.id}>
                 <ListItem disablePadding>
                   <ListItemButton
                     sx={{
                       display: "flex",
                       py: "6px",
                       px: 1.5,
-                      textAlign: "center",
+                      textAlign: style ? "left" : "center",
                     }}
                     onClick={() => handleNavigation(link)}
                   >

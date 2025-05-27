@@ -33,7 +33,7 @@ const ErrorBoundary = () => {
         <Toolbar />
         <Container
           sx={{
-            px: { xs: "1rem", sm: "3rem", md: "4rem" },
+            px: { xs: "1.25rem", md: "2.5rem", lg: "4rem" },
             py: 2,
             maxWidth: "1920px !important",
           }}
@@ -50,7 +50,7 @@ const ErrorBoundary = () => {
             <Typography
               variant="h1"
               sx={{
-                fontSize: "clamp(1.75rem, 5vw, 4rem)",
+                fontSize: "clamp(1.5rem, 5vw, 4rem)",
                 color: theme.palette.text.primary,
               }}
             >

@@ -1,14 +1,12 @@
-/* eslint-disable react/prop-types */
 import { useContext } from "react";
 import { ColorModeContext } from "../theme";
 import { useTheme } from "@emotion/react";
 import { IconButton } from "@mui/material";
 import { DarkModeOutlined, LightModeOutlined } from "@mui/icons-material";
 
-const ToggleMode = ({ scrollTrigger }) => {
+const ToggleMode = () => {
   const colorMode = useContext(ColorModeContext);
   const theme = useTheme();
-  const iconColor = scrollTrigger ? "#fff" : "inherit";
 
   return (
     <>
@@ -22,7 +20,7 @@ const ToggleMode = ({ scrollTrigger }) => {
             );
             colorMode.toggleColorMode();
           }}
-          sx={{ color: iconColor }}
+          sx={{ color: theme.palette.custom.white }}
         >
           <DarkModeOutlined />
         </IconButton>
@@ -36,7 +34,7 @@ const ToggleMode = ({ scrollTrigger }) => {
             );
             colorMode.toggleColorMode();
           }}
-          sx={{ color: iconColor }}
+          sx={{ color: theme.palette.custom.white }}
         >
           <LightModeOutlined />
         </IconButton>

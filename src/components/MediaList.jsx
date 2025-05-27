@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Grid, Typography, useTheme } from "@mui/material";
 import MediaCard from "./MediaCard";
+
 const MediaList = ({ data, genresType, section, from }) => {
   const theme = useTheme();
   return (
@@ -27,6 +28,7 @@ const MediaList = ({ data, genresType, section, from }) => {
               genresType={genresType}
               section={section}
               from={from}
+              index={index}
             />
           </Grid>
         ))

@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
 import { Close } from "@mui/icons-material";
+import logo from "../images/logo-transparent.png";
 import {
   Box,
   Divider,
   Drawer,
   IconButton,
+  Stack,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -20,8 +22,9 @@ const Sidebar = ({ state, toggleDrawer }) => {
   return (
     <Drawer
       sx={{
-        ".MuiPaper-root.css-k1yagv-MuiPaper-root-MuiDrawer-paper": {
+        "& .MuiDrawer-paper": {
           height: "100%",
+          backgroundColor: theme.palette.background.default,
         },
       }}
       anchor={"left"}
@@ -35,21 +38,41 @@ const Sidebar = ({ state, toggleDrawer }) => {
           mx: "auto",
           mt: 6,
           position: "relative",
-          pt: 10,
+          // pt: 10,
         }}
       >
-        <IconButton
-          onClick={() => toggleDrawer(false)}
+        {/* Header of Sidebar */}
+        <Stack
           sx={{
-            position: "absolute",
-            top: 0,
-            right: 10,
-            transition: "0.3s",
-            ":hover": { color: "red", transform: "rotate(180deg)" },
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            pb: "40px",
+            pr: "10px",
           }}
         >
-          <Close />
-        </IconButton>
+          <Link
+            to={"/"}
+            style={{ flexGrow: 1 }}
+            onClick={() => toggleDrawer(false)}
+          >
+            <img
+              src={logo}
+              alt="logo"
+              style={{ height: "58px", width: "158px", objectFit: "cover" }}
+            />
+          </Link>
+
+          <IconButton
+            onClick={() => toggleDrawer(false)}
+            sx={{
+              transition: "0.3s",
+              ":hover": { color: "red", transform: "rotate(180deg)" },
+            }}
+          >
+            <Close />
+          </IconButton>
+        </Stack>
 
         <AccordionLinks
           title="Movies"

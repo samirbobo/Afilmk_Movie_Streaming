@@ -32,9 +32,18 @@ const MediaTypeReviews = ({ data }) => {
   const [selectedReview, setSelectedReview] = useState(null);
   const reviews = data?.reviews?.results || [];
   const isLg = useMediaQuery("(min-width:1024px)");
+  const isMd = useMediaQuery("(min-width:768px) and (max-width:1023px)");
+  const isSm = useMediaQuery("(min-width:480px) and (max-width:767px)");
+  const isXsSm = useMediaQuery("(min-width:0px) and (max-width:479px)");
   let shouldShowArrows = false;
 
   if (isLg && reviews.length > 2) {
+    shouldShowArrows = true;
+  } else if (isMd && reviews.length > 2) {
+    shouldShowArrows = true;
+  } else if (isSm && reviews.length > 2) {
+    shouldShowArrows = true;
+  } else if (isXsSm && reviews.length > 2) {
     shouldShowArrows = true;
   }
 
@@ -53,10 +62,17 @@ const MediaTypeReviews = ({ data }) => {
     <Box
       component={"article"}
       sx={{
-        background: "#1A1A1A",
+        background: theme.palette.background.paper,
+        boxShadow:
+          theme.palette.mode === "light"
+            ? "0 2px 8px rgba(0, 0, 0, 0.12)"
+            : "0 2px 10px rgba(255, 255, 255, 0.05)",
         p: { xs: "24px", md: "40px" },
         borderRadius: "10px",
-        border: "1px solid #262626",
+        border:
+          theme.palette.mode === "dark"
+            ? "1px solid #404040"
+            : "1px solid #e5e5e5",
         overflow: "hidden",
       }}
     >
@@ -73,7 +89,7 @@ const MediaTypeReviews = ({ data }) => {
         <Typography
           variant="h3"
           sx={{
-            color: theme.palette.text.secondary,
+            color: theme.palette.text.primary,
             fontSize: { xs: 16, md: 18 },
           }}
         >
@@ -120,8 +136,11 @@ const MediaTypeReviews = ({ data }) => {
                 key={review.id}
                 style={{
                   borderRadius: "12px",
-                  background: "#0F0F0F",
-                  border: "2px solid #262626",
+                  background: theme.palette.background.default,
+                  border:
+                    theme.palette.mode === "dark"
+                      ? "1px solid #404040"
+                      : "1px solid #e5e5e5",
                   overflow: "hidden",
                   boxSizing: "border-box",
                 }}
@@ -169,8 +188,11 @@ const MediaTypeReviews = ({ data }) => {
                         gap: 0.5,
                         p: "4px 8px",
                         borderRadius: "50px",
-                        background: "#141414",
-                        border: "1px solid #262626",
+                        background: theme.palette.background.paper,
+                        border:
+                          theme.palette.mode === "dark"
+                            ? "1px solid #404040"
+                            : "1px solid #e5e5e5",
                       }}
                     >
                       <Rating
@@ -181,7 +203,7 @@ const MediaTypeReviews = ({ data }) => {
                         emptyIcon={<StarRoundedIcon fontSize="inherit" />}
                         sx={{
                           "& .MuiRating-iconFilled": {
-                            color: theme.palette.secondary.main, // لون النجوم المملوءة
+                            color: "#ffac00", // لون النجوم المملوءة
                           },
                           "& .MuiRating-iconEmpty": {
                             color: theme.palette.text.secondary, // لون النجوم الفارغة (اختياري)
@@ -224,6 +246,14 @@ const MediaTypeReviews = ({ data }) => {
                       size="small"
                       variant="contained"
                       onClick={handleClickOpen("paper", review)}
+                      sx={{
+                        background: theme.palette.custom.favBackLight,
+                        color: theme.palette.custom.white,
+                        transition: "0.2s linear",
+                        "&:hover": {
+                          background: theme.palette.custom.favBackDark,
+                        },
+                      }}
                     >
                       Show more
                     </Button>

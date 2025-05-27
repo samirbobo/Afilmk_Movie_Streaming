@@ -5,6 +5,7 @@ import axios from "axios";
 import MediaList from "../../../components/MediaList";
 import { API_KEY, BASE_URL } from "../../../baseUrl";
 import HeaderSection from "../../../components/HeaderSection";
+import Loading from "../../../components/Loading";
 
 const fetchPopularMedia = (type) =>
   axios
@@ -24,6 +25,7 @@ const Popular = () => {
     data: popularMovies,
     isLoading: isMovieLoading,
     isError: isMovieError,
+    isSuccess: isMovieSuccess,
   } = useQuery({
     queryKey: ["popular-movies"],
     queryFn: () => fetchPopularMedia("movie"),
@@ -33,17 +35,14 @@ const Popular = () => {
     data: popularTvShows,
     isLoading: isTvShowsLoading,
     isError: isTvShowsError,
+    isSuccess: isTvSuccess,
   } = useQuery({
     queryKey: ["popular-tvShows"],
     queryFn: () => fetchPopularMedia("tv"),
   });
 
-  if (isMovieLoading || isTvShowsLoading) {
-    return "Loading";
-  }
-
   if (isMovieError || isTvShowsError) {
-    return "fetch Popular error";
+    return;
   }
 
   return (
@@ -51,7 +50,7 @@ const Popular = () => {
       component={"section"}
       className="popular"
       sx={{
-        px: { xs: "1rem", sm: "3rem", md: "4rem" },
+        px: { xs: "1.25rem", md: "2.5rem", lg: "4rem" },
         py: 4,
         maxWidth: "1920px !important",
       }}
@@ -64,10 +63,13 @@ const Popular = () => {
         handleTabChange={handleTabChange}
       />
 
-      <MediaList
-        data={selectedTab === 0 ? popularMovies : popularTvShows}
-        genresType={selectedTab}
-      />
+      {(isMovieLoading || isTvShowsLoading) && <Loading />}
+      {isMovieSuccess && isTvSuccess && (
+        <MediaList
+          data={selectedTab === 0 ? popularMovies : popularTvShows}
+          genresType={selectedTab}
+        />
+      )}
     </Container>
   );
 };

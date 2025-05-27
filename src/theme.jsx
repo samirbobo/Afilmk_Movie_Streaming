@@ -7,38 +7,33 @@ export const getDesignTokens = (mode) => ({
     ...(mode === "light"
       ? {
           // palette values for light mode
-          primary: {
-            main: "#C4DFDF",
-          },
-          secondary: {
-            main: "#D2E9E9",
-          },
           background: {
             default: "#F8F6F4",
-            paper: "#E3F4F4",
+            paper: "#fff",
           },
           text: {
-            primary: "#333333", // لون النصوص الأساسية
-            secondary: "#666666", // لون النصوص الفرعية
+            primary: "#171717", // لون النصوص الأساسية
+            secondary: "#404040", // لون النصوص الفرعية
           },
         }
       : {
           // palette values for dark mode
-          primary: {
-            main: "#950101",
-          },
-          secondary: {
-            main: "#FF0000",
-          },
           background: {
-            default: "#000000", // #141414
-            paper: "#3D0000",
+            default: "#171717", // deep black background
+            paper: "#262626", // card/modals background
           },
           text: {
-            primary: "#FFFFFF",
-            secondary: "#A0A0A0", // #B0B0B0
+            primary: "#FFFFFF", // main text
+            secondary: "#B3B3B3", // sub text
           },
         }),
+
+    custom: {
+      favBackLight: "#950101",
+      favBackDark: "#3D0000",
+      white: "#ffffff",
+      navBack: "#523c7f",
+    },
   },
 
   breakpoints: {
@@ -56,7 +51,6 @@ export const getDesignTokens = (mode) => ({
   },
 });
 
-// context for color mode
 export const ColorModeContext = createContext({
   toggleColorMode: () => {},
 });

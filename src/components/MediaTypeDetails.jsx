@@ -41,11 +41,12 @@ const MediaTypeDetails = ({ data }) => {
   };
 
   const typographyStyle = {
-    color: theme.palette.text.primary,
+    color: theme.palette.text.secondary,
     p: "6px 12px",
     borderRadius: "50px",
-    background: "#141414",
-    border: "1px solid #262626",
+    background: theme.palette.background.default,
+    border:
+      theme.palette.mode === "dark" ? "1px solid #404040" : "1px solid #e5e5e5",
     width: "fit-content",
     fontSize: 14,
   };
@@ -61,10 +62,17 @@ const MediaTypeDetails = ({ data }) => {
         flexDirection: "column",
         alignItems: "center",
         gap: { xs: "20px", md: "24px" },
-        background: "#1A1A1A",
+        background: theme.palette.background.paper,
+        boxShadow:
+          theme.palette.mode === "light"
+            ? "0 2px 8px rgba(0, 0, 0, 0.12)"
+            : "0 2px 10px rgba(255, 255, 255, 0.05)",
         p: { xs: "24px", md: "40px" },
         borderRadius: "10px",
-        border: "1px solid #262626",
+        border:
+          theme.palette.mode === "dark"
+            ? "1px solid #404040"
+            : "1px solid #e5e5e5",
       }}
     >
       {/* Year */}
@@ -165,10 +173,17 @@ const MediaTypeDetails = ({ data }) => {
               sx={{
                 p: { xs: "10px", md: "12px" },
                 borderRadius: "8px",
-                background: "#141414",
-                border: "1px solid #262626",
+                background: theme.palette.background.default,
+                border:
+                  theme.palette.mode === "dark"
+                    ? "1px solid #404040"
+                    : "1px solid #e5e5e5",
                 cursor: "pointer",
                 gap: { xs: 1, md: 2 },
+                boxShadow:
+                  theme.palette.mode === "light"
+                    ? "0 2px 8px rgba(0, 0, 0, 0.12)"
+                    : "0 2px 10px rgba(255, 255, 255, 0.05)",
               }}
               onClick={() => handleOpenModal(person?.id)}
             >
@@ -194,7 +209,7 @@ const MediaTypeDetails = ({ data }) => {
               <Typography
                 variant="body1"
                 sx={{
-                  color: theme.palette.text.primary,
+                  color: theme.palette.text.secondary,
                   fontSize: "16px",
                   flex: 1,
                 }}

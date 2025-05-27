@@ -61,10 +61,17 @@ const MediaTypeCast = ({ data }) => {
     <Box
       component={"article"}
       sx={{
-        background: "#1A1A1A",
+        background: theme.palette.background.paper,
+        boxShadow:
+          theme.palette.mode === "light"
+            ? "0 2px 8px rgba(0, 0, 0, 0.12)"
+            : "0 2px 10px rgba(255, 255, 255, 0.05)",
         p: { xs: "24px", md: "40px" },
         borderRadius: "10px",
-        border: "1px solid #262626",
+        border:
+          theme.palette.mode === "dark"
+            ? "1px solid #404040"
+            : "1px solid #e5e5e5",
         overflow: "hidden",
       }}
     >
@@ -81,7 +88,7 @@ const MediaTypeCast = ({ data }) => {
         <Typography
           variant="h3"
           sx={{
-            color: theme.palette.text.secondary,
+            color: theme.palette.text.primary,
             fontSize: { xs: 16, md: 18 },
           }}
         >
