@@ -16,8 +16,14 @@ import { Link } from "react-router-dom";
 
 const Sidebar = ({ state, toggleDrawer }) => {
   const theme = useTheme();
-  const { movieGenres, moviesError, tvShowGenres, tvShowsError } =
-    UseGlobalGenres();
+  const {
+    movieGenres,
+    moviesError,
+    isMoviesLoading,
+    tvShowGenres,
+    isTvShowsLoading,
+    tvShowsError,
+  } = UseGlobalGenres();
 
   return (
     <Drawer
@@ -78,7 +84,7 @@ const Sidebar = ({ state, toggleDrawer }) => {
           title="Movies"
           toggleDrawer={toggleDrawer}
           links={
-            moviesError
+            moviesError || isMoviesLoading
               ? [{ id: "all", name: "All" }]
               : [{ id: "all", name: "All" }, ...movieGenres]
           }
@@ -87,7 +93,7 @@ const Sidebar = ({ state, toggleDrawer }) => {
           title="Tv Shows"
           toggleDrawer={toggleDrawer}
           links={
-            tvShowsError
+            tvShowsError || isTvShowsLoading
               ? [{ id: "all", name: "All" }]
               : [{ id: "all", name: "All" }, ...tvShowGenres]
           }
