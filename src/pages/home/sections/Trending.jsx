@@ -2,7 +2,7 @@ import { Container, Stack, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { API_KEY, BASE_URL } from "../../../baseUrl";
-import ShowMoreBtn from "../../../components/showMoreBtn";
+import ShowMoreBtn from "../../../components/ShowMoreBtn";
 import MediaCarousel from "../../../components/MediaCarousel";
 import Loading from "../../../components/Loading";
 

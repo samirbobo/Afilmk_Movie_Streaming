@@ -7,7 +7,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import ShowMoreBtn from "../../components/showMoreBtn";
+import ShowMoreBtn from "../../components/ShowMoreBtn";
 import { UseGlobalGenres } from "../../context/GenresContext";
 import { useQueries } from "@tanstack/react-query";
 import axios from "axios";
